@@ -1,10 +1,9 @@
 import jwt_decode from "jwt-decode";
-export const url = process.env.REACT_APP_NAME;
+export const url = process.env.REACT_APP_NAME_LOCAL;
 
 
 export const saveToken = (token) => {
-  document.cookie = `TOKEN=${token
-    }; max-ege=${86400}; path=/; samesite=strict`;
+  document.cookie = `TOKEN=${token}; max-Age=${86400}; path=/; samesite=strict`;
 };
 
 export const getToken = () => {
@@ -13,8 +12,9 @@ export const getToken = () => {
 };
 
 export const deleteToken = () => {
-  document.cookie = `TOKEN=${0
-  }; max-ege=${0}; path=/; 0`;
+  document.cookie = "TOKEN=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  //document.cookie = `TOKEN=${0
+  //}; max-ege=${0}; path=/; 0`;
 };
 export const decodeToken = () => {
   const token = getToken();

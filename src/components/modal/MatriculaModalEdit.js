@@ -1,41 +1,50 @@
-import { Button, InputGroup, Modal, Table } from 'react-bootstrap';
+import { Button, InputGroup, Modal} from 'react-bootstrap';
 import { Formik, Form, Field } from "formik";
 import * as Yup from 'yup';
+import { useEffect, useState } from 'react';
+import { getLeccionAll } from '../../store/slices/leccion/leccionSlices';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { Icon } from '@iconify/react';
-import { useState } from 'react';
+import axios from 'axios';
+import { url } from '../../helpers/auth-token';
 
-
-const MatriculaModal = (props) => {
+const MatriculaModalEdit = (props) => {
 
     const dispatch = useDispatch()
     const { list: lecciones } = useSelector(store => store.leccionList);
-    const { list: reclusos } = useSelector(store => store.reclusoList);
-    const [resulData, setResulData] = useState([]);
-    const [cedula, setCedula] = useState("");
-    const [nombreCompleto, setnombreCompleto] = useState("");
-    console.log(cedula);
+   const { cedula, nombres, apellidos, leccion, programa:pro, estado } = props.data
+    const [estadoMatricula, setEstadoMatricula] = useState({});
+    const [leccionDatos, setLeccionDatos] = useState([]);
+    
     const validationReclusoSchema = Yup.object().shape({
         cedula: Yup.number().required("Requerido*"),
         nombres: Yup.string().required("Requerido*"),
         leccion: Yup.string().required("Requerido*"),
     })
 
-    const handleChange = ({ target }) => {
-        const { value } = target
-        const data = reclusos.filter(p => p.cedula.includes(value))
-        if (value) {
-            setResulData(data)
-        } else {
-            setResulData(reclusos)
+    useEffect(() => {
+        try {
+            dispatch(getLeccionAll())
+        } catch (error) {
+            console.log('====================================');
+            console.log(error);
+            console.log('====================================');
         }
-    }
-    const addRecluso = (recluso) => {
-        const { cedula, nombres, apellidos } = recluso
-        setCedula(cedula)
-        setnombreCompleto(nombres + ' ' + apellidos)
-    }
+        const estadoMatricula = async () => {
+            try {
+              const { data } = await axios.get(`${url}estado/estadoMatricula`);
+              setEstadoMatricula(data);
+            } catch (error) {
+              console.log(error);
+            }
+          }
+          estadoMatricula();
+          if(leccion){
+          const data = lecciones.filter(l => l.nombre !==leccion.nombre)
+          setLeccionDatos(data)
+        }
+    }, [dispatch, leccion]);
     return (
         <div>
             <Modal
@@ -47,7 +56,7 @@ const MatriculaModal = (props) => {
                 <Modal.Header closeButton>
                     <Modal.Title id="contained-modal-title-vcenter"
                     >
-                        Matricular Recluso a una Nueva Lección
+                        Editar Matricula del Recluso
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
@@ -64,7 +73,7 @@ const MatriculaModal = (props) => {
                                         className='form-control'
                                         placeholder='Identificación'
                                         name='busqueda'
-                                        onChange={handleChange}
+                                       disabled
                                     />
                                 </InputGroup>
                             </div>
@@ -72,19 +81,17 @@ const MatriculaModal = (props) => {
                         <Formik
                             initialValues={{
                                 cedula: cedula,
-                                nombres: nombreCompleto,
-                                leccion: "",
+                                nombres: nombres +" " + apellidos,
+                                leccion:"",
 
                             }}
                             validationSchema={validationReclusoSchema}
                             onSubmit={(values, { resetForm }) => {
-                                console.log(cedula, values.leccion);
-                                setCedula('')
-                                setnombreCompleto('')
+                                console.log(values);
                                 resetForm()
                             }}
                         >
-                            {({ values, errors, touched, handleChange, handleBlur }) => (
+                            {({ errors, touched }) => (
 
                                 <Form>
                                     <div className='row'>
@@ -92,16 +99,14 @@ const MatriculaModal = (props) => {
                                             <b>
                                                 <label htmlFor="cedula" className="form-label">Cedula:</label>
                                             </b>
-                                            <input
+                                            <Field
                                                 name="cedula"
                                                 id="cedula"
                                                 type="number"
                                                 className="form-control"
                                                 placeholder="Cedula"
                                                 disabled
-                                                onChange={handleChange}
-                                                onBlur={handleBlur}
-                                                value={cedula}
+                                               
                                             />
                                             {errors.cedula && touched.cedula ? (
                                                 <div className="text-danger">{errors.cedula}</div>
@@ -116,6 +121,7 @@ const MatriculaModal = (props) => {
                                                 id="nombres"
                                                 className="form-control"
                                                 placeholder="Nombres"
+                                                
                                                 disabled
                                             />
                                             {errors.nombres && touched.nombres ? (
@@ -134,10 +140,10 @@ const MatriculaModal = (props) => {
                                                 id="leccion"
                                                 className="form-control"
                                             >
-                                                <option defaultValue={true}>Seleccione una Lección</option>
-                                                {Array.isArray(lecciones) ? lecciones.map((leccion, i) =>
-                                                    leccion.programa.map((pro, i) =>
-                                                        <option key={i} value={leccion.nombre}>{`Nivel ${leccion.nivel} - ${pro.nombre} - Lección ${leccion.nombre}`}</option>
+                                                <option value={leccion.nombre}>{`Nivel ${leccion.nivel} - Programa ${pro} - Lección ${leccion.nombre}`}</option>
+                                                {Array.isArray(leccionDatos) ? leccionDatos.map((lec, i) =>
+                                                    leccion.programa.map((prog, i) =>
+                                                        <option key={i} value={lec.nombre}>{`Nivel ${lec.nivel} - Programa ${prog.nombre} - Lección ${lec.nombre}`}</option>
                                                     )
                                                 ) : null
                                                 }
@@ -147,46 +153,10 @@ const MatriculaModal = (props) => {
                                             ) : null}
                                         </div>
                                     </div>
-                                    <Table responsive striped>
-                                        <thead>
-                                            <tr>
-                                                <th>Cedula</th>
-                                                <th>Nombres</th>
-                                                <th>Apellidos</th>
-                                                <th>Nit</th>
-                                                <th>Celda</th>
-                                                <th>Patio</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {Array.isArray(resulData) ?
-                                                resulData.map((recluso) =>
-                                                    <tr key={recluso._id}>
-                                                        <td>{recluso.cedula}</td>
-                                                        <td>{recluso.nombres}</td>
-                                                        <td>{recluso.apellidos}</td>
-                                                        <td>{recluso.nit}</td>
-                                                        <td>{recluso.celda}</td>
-                                                        <td>{recluso.patio}</td>
-                                                        <td>
-                                                            <button
-                                                                type="button"
-                                                                className='btn btn-success'
-                                                                onClick={() => addRecluso(recluso)}
-                                                            >
-                                                                add
-                                                            </button>
-                                                        </td>
-                                                    </tr>
-                                                ) : null
-                                            }
-                                        </tbody>
-                                    </Table>
-
                                     <Modal.Footer>
-                                        <button type="submit" id="guardar" className="btn btn-success">
-                                            <Icon icon="fluent:save-24-filled" color="white" width="20" />
-                                            Matricular
+                                        <button type="submit" id="actualizar" className="btn btn-warning">
+                                            <Icon icon="fluent:save-24-filled"  width="20" />
+                                           Actualizar Matricula
                                         </button>
                                         <Button onClick={props.onHide} className="btn btn-danger">
                                             Cancelar
@@ -197,10 +167,9 @@ const MatriculaModal = (props) => {
                         </Formik>
                     </div>
                 </Modal.Body>
-
             </Modal>
         </div >
     )
 }
 
-export default MatriculaModal
+export default MatriculaModalEdit
