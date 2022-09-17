@@ -20,7 +20,7 @@ const [create, setCreate] = useState();
   useEffect(() => {
     const cargarRole = async () => {
       try {
-        const { data } = await axios.get(`${url}roles`);
+        const { data } = await axios.get(`${url}estado/roles`);
         setRoles(data);
       } catch (error) {
         console.log(error);
