@@ -7,32 +7,29 @@ import { getProgamaAll } from '../../store/slices/programa/programaSlices';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { addLeccion, updateLeccion } from '../../store/slices/leccion/leccionSlices';
-import { useCallback } from 'react';
 
 function LeccionModal(props) {
     const [nombrePrograma, setNombrePrograma] = useState(props.programa);
     const [programaEditar, setProgramaEditar] = useState([]);
-    const { _id, nombre, programa, descripcion } = props.leccion
+    const { _id, nombre, nivel, programa, descripcion } = props.leccion
     const dispatch = useDispatch();
     const { list: programas } = useSelector(store => store.progamaList);
-    const consulta = useCallback(() => {
+
+    useEffect(() => {
         if (_id) {
             const [{ nombre }] = programa
             setNombrePrograma(nombre)
             const programaEdit = programas.filter(p => p.nombre !== nombre)
             setProgramaEditar(programaEdit)
-        } else {
+        }else{
             setNombrePrograma("")
         }
-    }, [_id, programa, programas])
-    useEffect(() => {
-
         dispatch(getProgamaAll())
-        consulta()
-    }, [consulta, dispatch]);
+    }, [_id, dispatch]);
 
     const validationReclusoSchema = Yup.object().shape({
         nombre: Yup.string().required("Requerido*"),
+        nivel:Yup.number().required("Requerido*").max(15,'El nivel de las lecciones debe ser menor de 16').min(1,"Debe ingresar lecciones mayor a 0"),
         descripcion: Yup.string().required("Requerido*"),
         programa: Yup.string("Por Favor Selecciones un Programa").required("Requerido*"),
     })
@@ -55,7 +52,8 @@ function LeccionModal(props) {
 
                         initialValues={{
                             nombre: nombre || "",
-                            programa: nombrePrograma || "",
+                            nivel: nivel || "",
+                            programa:nombrePrograma|| "",
                             descripcion: descripcion || "",
                         }}
                         validationSchema={validationReclusoSchema}
@@ -130,6 +128,23 @@ function LeccionModal(props) {
                                         ) : null}
                                     </div>)
                                 }
+                                                                <div className="col">
+                                    <b>
+                                        <label htmlFor="nivel">Nivel de la lección:</label>
+                                    </b>
+                                    <Field
+                                        type="number"
+                                        name="nivel"
+                                        id="nivel"
+                                        className="form-control"
+                                        placeholder="Nivel"
+                                        max="15"
+                                        min="1"
+                                    />
+                                    {errors.nivel && touched.nivel ? (
+                                        <div className="text-danger">{errors.nivel}</div>
+                                    ) : null}
+                                </div>
                                 <div className="col">
                                     <b>
                                         <label htmlFor="descripcion">Descripción:</label>

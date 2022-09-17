@@ -52,7 +52,7 @@ const Lecciones = () => {
       <table className="table table-hover fs-6">
         <thead>
           <tr>
-          <th>Id</th>
+          <th>Nivel</th>
             <th>Nombre</th>
             <th>Programa</th>
             <th>Descripción</th>
@@ -62,8 +62,8 @@ const Lecciones = () => {
         <tbody>
           {Array.isArray(lecciones) ?
             lecciones.map((leccion,i) =>
-              <tr key={i}>
-                 <td>{i+1}</td>
+              <tr key={leccion._id}>
+                 <td>{leccion.nivel}</td>
                 <td>{leccion.nombre}</td>
                 <td>{
                   Array.isArray(leccion.programa) ?
@@ -100,7 +100,8 @@ const Lecciones = () => {
             ) : null
           }
         </tbody>
-      </table></div>
+      </table>
+      </div>
   )
 }
 
