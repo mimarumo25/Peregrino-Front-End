@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { deleteRecluso, getReclusoAll } from '../../store/slices/recluso/reclusoSlices';
-import ReclusoModal from '../modal/ReclusoModal';
+import { ReclusoModal } from '../modal';
 import { Icon } from '@iconify/react';
 import { Button } from 'react-bootstrap';
 
-const Internos = () => {
+export const Internos = () => {
   const dispatch = useDispatch()
   const [modalShow, setModalShow] = useState(false);
   const [titleModal, settitleModal] = useState('');
@@ -15,6 +15,7 @@ const Internos = () => {
 
   useEffect(() => {
     try {
+      console.log('Se ejecuta el');
       dispatch(getReclusoAll())
     } catch (error) {
       console.log('====================================');
@@ -31,10 +32,11 @@ const Internos = () => {
     dispatch(deleteRecluso(id))
   }
   const modalEditRecluso = (recluso) => {
-    setModalShow(true)
-    settitleModal('Editar Recluso')
-    setreclusoEdit(recluso)
-    recluso={reclusoEdit}
+    setModalShow(true);
+    settitleModal('Editar Recluso');
+    setreclusoEdit(recluso);
+    console.log( recluso );
+    recluso={reclusoEdit};
   }
   return (
     <div>

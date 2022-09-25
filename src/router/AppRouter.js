@@ -8,7 +8,7 @@ import { PublicRoute } from "./PublicRoutes";
 import { DashboardRoutes } from "./DashboardRoutes";
 import { decodeToken,url } from "../helpers/auth-token";
 import axios from "axios";
-import {setLogin} from '../store/slices/login/index'
+import { setLogin } from '../store/slices/login/index'
 import { useSelector } from "react-redux";
 import { setUserLogged } from "../store/slices/userLogged";
 

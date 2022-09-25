@@ -1,6 +1,5 @@
-import React from 'react'
 
-const Informes = () => {
+export const Informes = () => {
   return (
     <div>Informes</div>
   )

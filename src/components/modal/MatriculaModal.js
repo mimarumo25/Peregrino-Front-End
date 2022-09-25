@@ -5,9 +5,10 @@ import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { Icon } from '@iconify/react';
 import { useState } from 'react';
+import { addMatricula } from '../../store/slices/matricula/matriculasSlices';
 
 
-const MatriculaModal = (props) => {
+export const MatriculaModal = (props) => {
 
     const dispatch = useDispatch()
     const { list: lecciones } = useSelector(store => store.leccionList);
@@ -15,12 +16,13 @@ const MatriculaModal = (props) => {
     const [resulData, setResulData] = useState([]);
     const [cedula, setCedula] = useState("");
     const [nombreCompleto, setnombreCompleto] = useState("");
+
     console.log(cedula);
     const validationReclusoSchema = Yup.object().shape({
         cedula: Yup.number().required("Requerido*"),
         nombres: Yup.string().required("Requerido*"),
         leccion: Yup.string().required("Requerido*"),
-    })
+    });
 
     const handleChange = ({ target }) => {
         const { value } = target
@@ -32,10 +34,16 @@ const MatriculaModal = (props) => {
         }
     }
     const addRecluso = (recluso) => {
-        const { cedula, nombres, apellidos } = recluso
+        console.log({ recluso });
+        const { cedula, nombres, apellidos } = recluso;
+        const nuevoNombre = `${ nombres } ${ apellidos }`;
+        console.log({ cedula });
         setCedula(cedula)
-        setnombreCompleto(nombres + ' ' + apellidos)
+        setnombreCompleto( nuevoNombre );
+        
+        console.log( {nombreCompleto} );
     }
+    
     return (
         <div>
             <Modal
@@ -74,11 +82,15 @@ const MatriculaModal = (props) => {
                                 cedula: cedula,
                                 nombres: nombreCompleto,
                                 leccion: "",
-
                             }}
+                            enableReinitialize
                             validationSchema={validationReclusoSchema}
                             onSubmit={(values, { resetForm }) => {
-                                console.log(cedula, values.leccion);
+                                // console.log(cedula, values.leccion);
+                                // console.log('Values', values );
+                                const { nombres, ...rest } = values;
+
+                                dispatch( addMatricula( rest ) );
                                 setCedula('')
                                 setnombreCompleto('')
                                 resetForm()
@@ -203,4 +215,4 @@ const MatriculaModal = (props) => {
     )
 }
 
-export default MatriculaModal
+export default MatriculaModal;

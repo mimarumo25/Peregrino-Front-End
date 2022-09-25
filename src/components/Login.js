@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 
 
 
-const Login = () => {
+export const Login = () => {
   const dispatch = useDispatch();
   return (
     <>

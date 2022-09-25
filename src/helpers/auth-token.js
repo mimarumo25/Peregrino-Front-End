@@ -1,5 +1,5 @@
 import jwt_decode from "jwt-decode";
-export const url = process.env.REACT_APP_NAME_LOCAL;
+export const url = process.env.REACT_APP_NAME;
 
 
 export const saveToken = (token) => {

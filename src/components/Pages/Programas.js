@@ -4,9 +4,9 @@ import { Button } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { deletePrograma, getProgamaAll } from '../../store/slices/programa/programaSlices';
-import ProgramaModal from '../modal/ProgramaModal'
+import { ProgramaModal } from '../modal'
 
-const Programas = () => {
+export const Programas = () => {
     const dispatch = useDispatch()
     const [modalShow, setModalShow] = useState(false);
     const [titleModal, settitleModal] = useState('');

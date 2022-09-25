@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { addLeccion, updateLeccion } from '../../store/slices/leccion/leccionSlices';
 
-function LeccionModal(props) {
+export const LeccionModal = (props) => {
     const [nombrePrograma, setNombrePrograma] = useState(props.programa);
     const [programaEditar, setProgramaEditar] = useState([]);
     const { _id, nombre, nivel, programa, descripcion } = props.leccion
@@ -53,10 +53,11 @@ function LeccionModal(props) {
                         initialValues={{
                             nombre: nombre || "",
                             nivel: nivel || "",
-                            programa:nombrePrograma|| "",
+                            programa:nombrePrograma | "",
                             descripcion: descripcion || "",
                         }}
-                        validationSchema={validationReclusoSchema}
+                        validationSchema={ validationReclusoSchema }
+                        enableReinitialize
                         onSubmit={(values, { resetForm }) => {
                             if (_id) {
                                 dispatch(updateLeccion(values, _id))

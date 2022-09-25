@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux';
 import { addPrograma, updatePrograma } from '../../store/slices/programa/programaSlices'
 
 
-function LeccionModal(props) {    
+export const ProgramaModal = (props) => {    
     const { _id, nombre, descripcion } = props.programa
     const dispatch = useDispatch();
 
@@ -103,4 +103,4 @@ function LeccionModal(props) {
     )
 }
 
-export default LeccionModal
+export default ProgramaModal;

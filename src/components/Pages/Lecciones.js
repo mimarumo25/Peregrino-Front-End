@@ -4,9 +4,9 @@ import { Button } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { deleteLeccion, getLeccionAll } from '../../store/slices/leccion/leccionSlices';
-import LeccionModal from '../modal/LeccionesModal';
+import { LeccionModal } from '../modal';
 
-const Lecciones = () => {
+export const Lecciones = () => {
   const dispatch = useDispatch()
   const [modalShow, setModalShow] = useState(false);
   const [titleModal, settitleModal] = useState('');
