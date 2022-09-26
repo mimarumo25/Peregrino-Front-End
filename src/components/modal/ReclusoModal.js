@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import { useDispatch } from 'react-redux';
 import { addRecluso, updateRecluso } from '../../store/slices/recluso/reclusoSlices';
 
-function ReclusoModal(props) {
+export const ReclusoModal = (props) => {
     
     const { _id, cedula, nombres, apellidos, nit, celda, patio } = props.recluso
     const dispatch = useDispatch();

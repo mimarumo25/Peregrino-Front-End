@@ -31,7 +31,7 @@ export const getReclusoAll = () => async (dispatch) => {
                 console.log("Vamos mal");         
             })
     } catch (error) {
-        console.log(error);
+        console.log(`Error: ${ error }`);
     }
     //const [role] = roles;
     //dispatch(setUserList({_id, identifica, nombres, apellidos, telefono, email, roles:role.name}))
@@ -112,6 +112,7 @@ export const deleteRecluso = (id) => async (dispatch) => {
               )
         
             }).catch(function (error) {
+              console.log( error );
               const {mensaje}=error.response.data
                 Swal.fire({
                     icon: 'error',

@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { Button } from 'react-bootstrap'
 import { Icon } from '@iconify/react';
-import UserModal from '../modal/UserModal';
-import axios from "axios";
+import { UserModal } from '../modal';
 import { url } from '../../helpers/auth-token';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { getUsersAll } from '../../store/slices/user/userSlices';
 
-const Usuarios = () => {
+import axios from "axios";
+
+export const Usuarios = () => {
 const [create, setCreate] = useState();
   const [modalShow, setModalShow] = useState(false);
   const [titleModal, settitleModal] = useState('');

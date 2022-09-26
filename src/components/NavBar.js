@@ -2,22 +2,23 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+
 import { Icon } from '@iconify/react';
 import { useDispatch } from 'react-redux';
 import { setLogin } from '../store/slices/login';
 import { deleteToken } from '../helpers/auth-token';
 
 
-function NavBar(args) {
+export const NavBar = (args) => {
     const dispatch = useDispatch()
     const logout = () => {
         deleteToken()
         dispatch(setLogin(false))
     }
     return (
-        <Navbar collapseOnSelect expand="md" bg="light" variant="light">
+        <Navbar collapseOnSelect expand="md" bg="secondary" variant="dark">
             <Container>
-                <Navbar.Brand ><span className='text-dark'>PeregrinoApp</span></Navbar.Brand>
+                <Navbar.Brand ><span className='text-white'>PeregrinoApp</span></Navbar.Brand>
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="me-auto">
@@ -36,5 +37,3 @@ function NavBar(args) {
         </Navbar>
     );
 }
-
-export default NavBar;

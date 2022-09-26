@@ -4,7 +4,7 @@ import { Modal, Card, Button } from 'react-bootstrap';
 import * as Yup from 'yup';
 
 
-const UserModal = (props) => {
+export const UserModal = (props) => {
 
     const { _id, identifica, nombres, apellidos, telefono, email, roles:rol } = props.userEdit
 

@@ -8,14 +8,16 @@ import { useSelector } from 'react-redux';
 import { Icon } from '@iconify/react';
 import axios from 'axios';
 import { url } from '../../helpers/auth-token';
+import { updateMatricula } from '../../store/slices/matricula/matriculasSlices';
 
-const MatriculaModalEdit = (props) => {
+export const MatriculaModalEdit = ( props ) => {
 
     const dispatch = useDispatch()
     const { list: lecciones } = useSelector(store => store.leccionList);
-   const { cedula, nombres, apellidos, leccion, programa:pro, estado } = props.data
-    const [estadoMatricula, setEstadoMatricula] = useState({});
+    const { cedula, nombres, apellidos, leccion, programa:pro, estado: estadoName, nivel, estadoId, matriculaId } = props.data;
+    const [estadoMatricula, setEstadoMatricula] = useState([]);
     const [leccionDatos, setLeccionDatos] = useState([]);
+    const [estadoDatos, setEstadoDatos] = useState([]);
     
     const validationReclusoSchema = Yup.object().shape({
         cedula: Yup.number().required("Requerido*"),
@@ -31,7 +33,8 @@ const MatriculaModalEdit = (props) => {
             console.log(error);
             console.log('====================================');
         }
-        const estadoMatricula = async () => {
+
+        const getEstadoMatricula = async () => {
             try {
               const { data } = await axios.get(`${url}estado/estadoMatricula`);
               setEstadoMatricula(data);
@@ -39,12 +42,22 @@ const MatriculaModalEdit = (props) => {
               console.log(error);
             }
           }
-          estadoMatricula();
-          if(leccion){
-          const data = lecciones.filter(l => l.nombre !==leccion.nombre)
-          setLeccionDatos(data)
-        }
+
+          getEstadoMatricula();
+
+          if( leccion ) {
+          const data = lecciones.filter(l => l.nombre !== leccion );
+          setLeccionDatos(data);
+          }
+
+          if ( estadoName ) {
+            const data = estadoMatricula.filter( e => e.name !== estadoName );
+            setEstadoDatos( data );
+          }
+
+        // console.log({ props });
     }, [dispatch, leccion]);
+
     return (
         <div>
             <Modal
@@ -61,34 +74,20 @@ const MatriculaModalEdit = (props) => {
                 </Modal.Header>
                 <Modal.Body>
                     <div className='container'>
-                        <div className='row'>
-                            <div className='col-4'>
-                                <label htmlFor="name" className='form-label'>Buscar por Identificación</label>
-                                <InputGroup >
-                                    <InputGroup.Text id="basic-addon1">
-                                        <Icon icon="el:search-alt" width="30" />
-                                    </InputGroup.Text>
-                                    <input
-                                        type="text"
-                                        className='form-control'
-                                        placeholder='Identificación'
-                                        name='busqueda'
-                                       disabled
-                                    />
-                                </InputGroup>
-                            </div>
-                        </div>
                         <Formik
                             initialValues={{
                                 cedula: cedula,
                                 nombres: nombres +" " + apellidos,
-                                leccion:"",
-
+                                leccion: leccion,
+                                estado: estadoId
                             }}
+                            enableReinitialize
                             validationSchema={validationReclusoSchema}
                             onSubmit={(values, { resetForm }) => {
-                                console.log(values);
-                                resetForm()
+                                const { nombres, ...rest } = values;
+                                console.log({ matriculaId });
+                                dispatch( updateMatricula( rest, matriculaId ));
+                                resetForm();
                             }}
                         >
                             {({ errors, touched }) => (
@@ -140,12 +139,11 @@ const MatriculaModalEdit = (props) => {
                                                 id="leccion"
                                                 className="form-control"
                                             >
-                                                <option value={leccion.nombre}>{`Nivel ${leccion.nivel} - Programa ${pro} - Lección ${leccion.nombre}`}</option>
-                                                {Array.isArray(leccionDatos) ? leccionDatos.map((lec, i) =>
-                                                    leccion.programa.map((prog, i) =>
-                                                        <option key={i} value={lec.nombre}>{`Nivel ${lec.nivel} - Programa ${prog.nombre} - Lección ${lec.nombre}`}</option>
-                                                    )
-                                                ) : null
+                                                <option value={ leccion }>{`Nivel ${ nivel } - Programa ${ pro } - Lección ${ leccion }`}</option>
+                                                {
+                                                    leccionDatos ? leccionDatos.map(( lec, index ) => (
+                                                        <option key={ index } value={ lec.nombre }>{`Nivel ${ leccion.nivel } - Programa ${ lec.programa[0].nombre } - Lección ${ lec.nombre }`}</option>
+                                                    )) : <h2>Loading</h2>
                                                 }
                                             </Field>
                                             {errors.leccion && touched.leccion ? (
@@ -153,12 +151,42 @@ const MatriculaModalEdit = (props) => {
                                             ) : null}
                                         </div>
                                     </div>
+                                    {/* Seleccionar estado */}
+                                    <div className="row py-2">
+                                        <div className="col">
+                                            <b>
+                                                <label htmlFor="leccion" className="form-label">Seleccione una Estado:</label>
+                                            </b>
+                                            <Field
+                                                as="select"
+                                                name="estado"
+                                                id="estado"
+                                                className="form-control"
+                                            >
+                                                <option value={ estadoId }>{`Estado: ${ estadoName }`}</option>
+                                                {/* <option value={leccion.nombre}>{`Nivel - Programa ${ pro.nombre } - Lección ${leccion.nombre}`}</option> */}
+
+                                                {
+                                                    estadoDatos ? estadoDatos.map(( estado ) => (
+                                                        <option value={ estado._id }>{`Estado: ${ estado.name }`}</option>
+                                                    )) : <h2>Loading</h2>
+                                                }
+                                               
+                                            </Field>
+                                            {errors.leccion && touched.leccion ? (
+                                                <div className="text-danger">{errors.leccion}</div>
+                                            ) : null}
+                                        </div>
+                                    </div>
                                     <Modal.Footer>
-                                        <button type="submit" id="actualizar" className="btn btn-warning">
+                                        <button 
+                                        type="submit" 
+                                        id="actualizar" 
+                                        className="btn btn-warning">
                                             <Icon icon="fluent:save-24-filled"  width="20" />
                                            Actualizar Matricula
                                         </button>
-                                        <Button onClick={props.onHide} className="btn btn-danger">
+                                        <Button onClick={ props.onHide } className="btn btn-danger">
                                             Cancelar
                                         </Button>
                                     </Modal.Footer>

@@ -1,27 +1,36 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&display=swap');
+  
 *{
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
+
 body{
   font-family: 'Open Sans', sans-serif;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
 }
 
 $light: #ffffff;
-$gray: #e7e9eb;
+$gray: #545454;
 
 
 .navbar{
+  width: 100%;
   padding: 1rem 1rem;
   border-bottom:1px solid $gray;
 }
+
 .sidebar {
-  background-color: rgb(190, 171, 171);
+  width: 100%;
+  background-color: rgb(114, 100, 100);
   height: calc(100vh - 52px);
-  border-right: 1px solid $gray;
+  // border-right: 1px solid $gray;
   ul{
     list-style: none;
-    padding: 1rem 1rem;
+    padding: 1rem;
     li{
       margin-bottom: 1rem;
       a{
@@ -37,12 +46,14 @@ $gray: #e7e9eb;
   }
   
 }
+
 .sidebarm{
   ul{
     list-style: none;
     padding: 1rem 2rem;
     li{
       margin-bottom: 1rem;
+      padding: .1rem 0;
       a{
         text-decoration: none;
         
@@ -56,7 +67,12 @@ $gray: #e7e9eb;
     
   }
 }
+
 li:hover{
   background-color: $gray;
   border-radius: .5rem;
+}
+
+.container {
+  margin: 1rem 0;
 }
