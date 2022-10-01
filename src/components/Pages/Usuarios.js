@@ -5,7 +5,7 @@ import { UserModal } from '../modal';
 import { url } from '../../helpers/auth-token';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
-import { getUsersAll } from '../../store/slices/user/userSlices';
+import { getUsersAll, searchUsers } from '../../store/slices/user/userSlices';
 
 import axios from "axios";
 
@@ -16,7 +16,23 @@ const [create, setCreate] = useState();
   const [userEdit, setUserEdit] = useState({});
   const [roles, setRoles] = useState({});
   const dispatch = useDispatch()
-  const { list: users } = useSelector(store => store.userList);
+  const { list: users, total } = useSelector(store => store.userList);
+
+  const [desde, setDesde] = useState(0);
+  
+  const [value, setValue] = useState('');
+
+  const handleSearch = ( e ) => {
+      setValue( e.target.value );
+      if ( e.target.value <= 0 ) {
+        dispatch( getUsersAll() );
+      }
+  }
+
+  const handleSubmit = ( e ) => {
+    e.preventDefault();
+    dispatch( searchUsers( value ) );
+  }
 
   useEffect(() => {
     const cargarRole = async () => {
@@ -29,13 +45,19 @@ const [create, setCreate] = useState();
     }
     cargarRole();
     try {
-      dispatch(getUsersAll())
+      if ( desde < 0 ) {
+        dispatch(getUsersAll(0));
+      } else if ( desde >= total && total !== 0 ) {
+        setDesde( prevDesde => prevDesde - 5 );
+      } else {
+        dispatch(getUsersAll( desde ));
+      }
     } catch (error) {
       console.log('====================================');
       console.log(error);
       console.log('====================================');
     }
-  }, [dispatch]);
+  }, [dispatch, desde]);
   const modalNewUser = () => {
     setModalShow(true)
     settitleModal('Nuevo Usuario')
@@ -51,8 +73,26 @@ const [create, setCreate] = useState();
   function eliminarUser(user) {
     alert(JSON.stringify(user))
   }
+
+  const cambiarPagina = ( valor ) => {
+    if ( desde === 0 && valor > 0 ) {
+      setDesde(+5);
+      return;
+    }
+
+    if ( valor < 0 && desde < 0 ) {
+      setDesde(0);
+    } else if ( desde >= total ) {
+      setDesde( prevDesde => prevDesde - valor );
+    } else {
+      setDesde( prevDesde => prevDesde + valor );
+    }
+
+  }
+
   return (
     <div>
+      <h2>{ ( desde < 0 ) ? 0 : desde }/{ total }</h2>
       <UserModal
         show={modalShow}
         title={titleModal}
@@ -63,8 +103,33 @@ const [create, setCreate] = useState();
         backdrop="static"
         keyboard={false}
       />
-      <dir className='py-2'>
+      <dir className='py-2 d-flex align-items-center justify-content-between'>
         <Button onClick={modalNewUser}><Icon icon="ant-design:plus-circle-outlined" width="20" /> Nuevo</Button>
+        {/* SEARCH */}
+        <form
+          style={{
+            width: "320px",
+            padding: "0 1rem",
+          }}
+          className="form"
+          onSubmit={handleSubmit}
+        >
+          <div className="input-group">
+            <input
+              type="search"
+              className="form-control"
+              onChange={handleSearch}
+              placeholder={`Buscar Usuario por Nombre`}
+              value={value}
+              aria-label="Buscar..."
+              aria-describedby="search-addon"
+            />
+            <button className="input-group-text border-0" id="search-addon">
+              <Icon icon="akar-icons:search" color="white" width="20" />
+            </button>
+          </div>
+        </form>
+        {/* SEARCH */}
       </dir>
       <table className="table table-hover fs-6">
         <thead>
@@ -73,8 +138,10 @@ const [create, setCreate] = useState();
             <th>Apellidos</th>
             <th>Telefono</th>
             <th>Email</th>
-            <th>Roles</th>
-            <th>Acciones</th>
+            {
+              value.length === 0 && <th>Roles</th>
+            }
+            <th className='pr-2 d-md-flex justify-content-md-end'>Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -85,11 +152,15 @@ const [create, setCreate] = useState();
                 <td>{user.apellidos}</td>
                 <td>{user.telefono}</td>
                 <td>{user.email}</td>
-                <td>{Array.isArray(user.roles) ?
-                  user.roles.map((rol,i) =>
-                    <label key={i}> {rol.name}</label>
-                  ) : null}
-                </td>
+                {
+                  value.length === 0 && (
+                    <td>{Array.isArray(user.roles) ?
+                      user.roles.map((rol,i) =>
+                        <label key={i}> {rol.name}</label>
+                      ) : null}
+                    </td>
+                  )
+                }
                 <td className="d-grid gap-2 d-md-flex justify-content-md-end">
 
                   <button
@@ -118,6 +189,21 @@ const [create, setCreate] = useState();
           }
         </tbody>
       </table>
+
+{/* PAGINATION */}
+{
+        value.length === 0 && (
+        <div className='actions d-flex gap-2'>
+          {
+            desde > 0 && <button className='btn btn-secondary' onClick={ () => cambiarPagina( -5 ) }>Previos</button>
+          }
+          {
+            ( total > 5 ) && <button className='btn btn-secondary' onClick={ () => cambiarPagina( 5 ) } >Siguientes</button>
+          }
+        </div>
+        )
+      }
+      {/* PAGINATION */}
 
     </div>
   )

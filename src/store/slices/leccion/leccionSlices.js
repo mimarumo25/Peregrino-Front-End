@@ -7,11 +7,15 @@ import { headers, url } from "../../../helpers/auth-token";
 export const leccionSlice = createSlice({
   name: "leccion",
   initialState: {
-    list: []
+    list: [],
+    total: 0
   },
   reducers: {
     setLeccionList: (state, action) => {
       state.list = action.payload;
+    },
+    setLeccionTotal: (state, action) => {
+      state.total = action.payload;
     },
     AddLeccionList: (state, action) => {
       state.list = action.payload;
@@ -19,20 +23,38 @@ export const leccionSlice = createSlice({
 
   },
 })
-export const { setLeccionList } = leccionSlice.actions;
+export const { setLeccionList, setLeccionTotal } = leccionSlice.actions;
 
 export default leccionSlice.reducer;
 
-export const getLeccionAll = () => async (dispatch) => {
+export const getLeccionAll = ( desde ) => async (dispatch) => {
   try {
-    await axios.get(url + "lecciones")
+    await axios.get(url + `lecciones?desde=${ desde }`)
       .then(res => {
-        dispatch(setLeccionList(res.data))
+        dispatch(setLeccionList(res.data.lecciones));
+        dispatch(setLeccionTotal(res.data.total));
       })
   } catch (error) {
     console.log(error);
   }
 }
+
+export const searchLecciones = ( term ) => async (dispatch) => {
+  try {
+      if ( term.length > 0 ) {
+        await axios.get(url + "coleccion/lecciones/" + term, headers() )
+          .then(res => {
+              dispatch( setLeccionList(res.data) );    
+              console.log('ESTAS SON LAS LECCIONES: ', res.data );         
+          })
+      } else {
+        dispatch(getLeccionAll());
+      }
+  } catch (error) {
+      console.log(`Error: ${ error }`);
+  }
+}
+
 export const addLeccion = (data) => async (dispatch) => {
 
   axios.post(url + 'lecciones/create', data, headers())

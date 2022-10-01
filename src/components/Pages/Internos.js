@@ -1,28 +1,50 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
-import { deleteRecluso, getReclusoAll } from '../../store/slices/recluso/reclusoSlices';
+import { deleteRecluso, getReclusoAll, searchReclusos } from '../../store/slices/recluso/reclusoSlices';
 import { ReclusoModal } from '../modal';
 import { Icon } from '@iconify/react';
 import { Button } from 'react-bootstrap';
+import { Search } from '../Search';
 
 export const Internos = () => {
   const dispatch = useDispatch()
   const [modalShow, setModalShow] = useState(false);
   const [titleModal, settitleModal] = useState('');
   const [reclusoEdit, setreclusoEdit] = useState({});
-  const { list: reclusos } = useSelector(store => store.reclusoList);
+  const { list: reclusos, total } = useSelector(store => store.reclusoList);
+  const [desde, setDesde] = useState(0);
+  
+  const [value, setValue] = useState('');
+
+  const handleSearch = ( e ) => {
+      setValue( e.target.value );
+      if ( e.target.value <= 0 ) {
+        dispatch( getReclusoAll() );
+      }
+  }
+
+  const handleSubmit = ( e ) => {
+    e.preventDefault();
+    dispatch( searchReclusos( value ) );
+  }
 
   useEffect(() => {
     try {
-      console.log('Se ejecuta el');
-      dispatch(getReclusoAll())
+      if ( desde < 0 ) {
+        dispatch(getReclusoAll(0));
+      } else if ( desde >= total && total !== 0 ) {
+        setDesde( prevDesde => prevDesde - 5 );
+      } else {
+        dispatch(getReclusoAll( desde ));
+      }
     } catch (error) {
       console.log('====================================');
       console.log(error);
       console.log('====================================');
     }
-  }, [dispatch]);
+  }, [dispatch, desde]);
+
   const modalNewRecluso = () => {
     setModalShow(true)
     settitleModal('Nuevo Recluso')
@@ -38,8 +60,26 @@ export const Internos = () => {
     console.log( recluso );
     recluso={reclusoEdit};
   }
+
+  const cambiarPagina = ( valor ) => {
+    if ( desde === 0 && valor > 0 ) {
+      setDesde(+5);
+      return;
+    }
+
+    if ( valor < 0 && desde < 0 ) {
+      setDesde(0);
+    } else if ( desde >= total ) {
+      setDesde( prevDesde => prevDesde - valor );
+    } else {
+      setDesde( prevDesde => prevDesde + valor );
+    }
+
+  }
+
   return (
     <div>
+      <h2>{ ( desde < 0 ) ? 0 : desde }/{ total }</h2>
       <ReclusoModal
         show={modalShow}
         title={titleModal}
@@ -48,8 +88,30 @@ export const Internos = () => {
         backdrop="static"
         keyboard={false}
       />
-      <div className='py-2'>
+      <div className='py-2 d-flex align-items-center justify-content-between'>
         <Button onClick={modalNewRecluso}><Icon icon="ant-design:plus-circle-outlined" width="20" /> Nuevo</Button>
+        {/* <Search term='Reclusos' /> */}
+        {/* SEARCH */}
+        <form style={{
+        width: '320px',
+        padding: '0 1rem'
+    }} className="form" onSubmit={ handleSubmit }>
+    <div className="input-group">
+      <input
+        type="search"
+        className="form-control"
+        onChange={ handleSearch }
+        placeholder={`Buscar Recluso por Cedula`}
+        value={ value }
+        aria-label="Buscar..."
+        aria-describedby="search-addon"
+      />
+      <button className="input-group-text border-0" id="search-addon">
+        <Icon icon="akar-icons:search" color="white" width="20" />
+      </button>
+    </div>
+    </form>
+        {/* SEARCH */}
       </div>
       <table className="table table-hover fs-6">
         <thead>
@@ -100,6 +162,16 @@ export const Internos = () => {
           }
         </tbody>
       </table>
+      {
+        value.length === 0 && (
+        <div className='actions d-flex gap-2'>
+          {
+            desde > 0 && <button className='btn btn-secondary' onClick={ () => cambiarPagina( -5 ) }>Previos</button>
+          }
+          <button className='btn btn-secondary' onClick={ () => cambiarPagina( 5 ) } >Siguientes</button>
+        </div>
+        )
+      }
     </div>
   )
 }

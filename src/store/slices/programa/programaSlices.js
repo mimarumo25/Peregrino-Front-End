@@ -7,11 +7,15 @@ import { headers, url } from "../../../helpers/auth-token";
 export const programaSlice = createSlice({
   name: "programa",
   initialState: {
-    list: []
+    list: [],
+    total: 0
   },
   reducers: {
     setProgramaList: (state, action) => {
       state.list = action.payload;
+    },
+    setProgramaTotal: (state, action) => {
+      state.total = action.payload;
     },
     AddProgramaList: (state, action) => {
       state.list = action.payload;
@@ -19,20 +23,38 @@ export const programaSlice = createSlice({
 
   },
 })
-export const { setProgramaList } = programaSlice.actions;
+export const { setProgramaList, setProgramaTotal } = programaSlice.actions;
 
 export default programaSlice.reducer;
 
-export const getProgamaAll = () => async (dispatch) => {
+export const getProgamaAll = ( desde ) => async (dispatch) => {
   try {
-    await axios.get(url + "programa")
+    await axios.get(url + `programa?desde=${ desde }`)
       .then(res => {
-        dispatch(setProgramaList(res.data))
+        dispatch(setProgramaList(res.data.programas));
+        dispatch(setProgramaTotal(res.data.total));
       })
   } catch (error) {
     console.log(error);
   }
+};
+
+export const searchProgramas = ( term ) => async (dispatch) => {
+  try {
+      if ( term.length > 0 ) {
+        await axios.get(url + "coleccion/programas/" + term, headers() )
+          .then(res => {
+              dispatch(setProgramaList(res.data))     
+              console.log('ESTOS SON LOS PROGRAMAS: ', res.data );         
+          })
+      } else {
+        dispatch(getProgamaAll());
+      }
+  } catch (error) {
+      console.log(`Error: ${ error }`);
+  }
 }
+
 export const addPrograma = (data) => async (dispatch) => {
 
   axios.post(url + 'programa/create', data, headers())

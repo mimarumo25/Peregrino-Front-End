@@ -5,3 +5,4 @@ export * from './NavBar';
 export * from './NavBarM';
 export * from './Sidebar';
 export * from './LoaderSpinner';
+export * from './Search';

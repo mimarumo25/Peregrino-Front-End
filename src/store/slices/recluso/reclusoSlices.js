@@ -7,11 +7,15 @@ import { headers, url } from "../../../helpers/auth-token";
 export const reclusoSlice = createSlice({
     name: "recluso",
     initialState: {
-        list: []
+        list: [],
+        total: 0
     },
     reducers: {
         setReclusoList: (state, action) => {
             state.list = action.payload;
+        },
+        setReclusoTotal: (state, action) => {
+          state.total = action.payload;
         },
         AddReclusoList: (state, action) => {
             state.list = action.payload;
@@ -19,16 +23,17 @@ export const reclusoSlice = createSlice({
         
     },
 })
-export const { setReclusoList } = reclusoSlice.actions;
+export const { setReclusoList, setReclusoTotal } = reclusoSlice.actions;
 
 export default reclusoSlice.reducer;
 
-export const getReclusoAll = () => async (dispatch) => {
+export const getReclusoAll = ( desde ) => async (dispatch) => {
+    console.log('DESDE DEL DISPATCH', { desde });
     try {
-        await axios.get(url + "Recluso")
+        await axios.get(url + `Recluso?desde=${ desde }`)
             .then(res => {
-                dispatch(setReclusoList(res.data))     
-                console.log("Vamos mal");         
+                dispatch(setReclusoList(res.data.reclusos));
+                dispatch(setReclusoTotal(res.data.total));   
             })
     } catch (error) {
         console.log(`Error: ${ error }`);
@@ -36,6 +41,23 @@ export const getReclusoAll = () => async (dispatch) => {
     //const [role] = roles;
     //dispatch(setUserList({_id, identifica, nombres, apellidos, telefono, email, roles:role.name}))
 }
+
+export const searchReclusos = ( term ) => async (dispatch) => {
+  try {
+      if ( term.length > 0 ) {
+        await axios.get(url + "coleccion/reclusos/" + term, headers() )
+          .then(res => {
+              dispatch(setReclusoList(res.data))     
+              console.log('ESTOS SON LOS RECLUSOS: ', res.data );         
+          })
+      } else {
+        dispatch(getReclusoAll());
+      }
+  } catch (error) {
+      console.log(`Error: ${ error }`);
+  }
+}
+
 export const addRecluso = (data) => async (dispatch) => {
   
         axios.post(url+'recluso/create', data, headers())
