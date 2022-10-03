@@ -11,15 +11,15 @@ import { addLeccion, updateLeccion } from '../../store/slices/leccion/leccionSli
 export const LeccionModal = (props) => {
     const [nombrePrograma, setNombrePrograma] = useState(props.programa);
     const [programaEditar, setProgramaEditar] = useState([]);
-    const { _id, nombre, nivel, programa, descripcion } = props.leccion
+    const { _id, nombre, nivel, programa, descripcion } = props.leccion;
     const dispatch = useDispatch();
     const { list: programas } = useSelector(store => store.progamaList);
 
     useEffect(() => {
         if (_id) {
-            const [{ nombre }] = programa
-            setNombrePrograma(nombre)
-            const programaEdit = programas.filter(p => p.nombre !== nombre)
+            const [{ nombre = 'NA' }] = programa;
+            setNombrePrograma(nombre);
+            const programaEdit = programas.filter(p => p?.nombre !== nombre )
             setProgramaEditar(programaEdit)
         }else{
             setNombrePrograma("")

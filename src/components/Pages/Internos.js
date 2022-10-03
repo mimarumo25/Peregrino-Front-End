@@ -14,7 +14,8 @@ export const Internos = () => {
   const [reclusoEdit, setreclusoEdit] = useState({});
   const { list: reclusos, total } = useSelector(store => store.reclusoList);
   const [desde, setDesde] = useState(0);
-  
+  const [countPage ,setCountPage] = useState(1);
+
   const [value, setValue] = useState('');
 
   const handleSearch = ( e ) => {
@@ -79,7 +80,8 @@ export const Internos = () => {
 
   return (
     <div>
-      <h2>{ ( desde < 0 ) ? 0 : desde }/{ total }</h2>
+      {/* <h2>{ ( desde < 0 ) ? 0 : desde }/{ total }</h2> */}
+
       <ReclusoModal
         show={modalShow}
         title={titleModal}
@@ -162,16 +164,30 @@ export const Internos = () => {
           }
         </tbody>
       </table>
+      <div className='d-flex align-items-center justify-content-between mt-4'>
       {
         value.length === 0 && (
         <div className='actions d-flex gap-2'>
           {
-            desde > 0 && <button className='btn btn-secondary' onClick={ () => cambiarPagina( -5 ) }>Previos</button>
+            desde > 0 && <button className='btn btn-secondary' onClick={ () => {
+              cambiarPagina( -5 );
+              setCountPage( prev => prev - 1 )
+            }}>Previos</button>
           }
-          <button className='btn btn-secondary' onClick={ () => cambiarPagina( 5 ) } >Siguientes</button>
+          {
+            !(countPage >= Math.ceil(total / 5)) && (
+              <button className='btn btn-secondary' onClick={ () => {
+                cambiarPagina( 5 );
+                setCountPage( prev => prev + 1 );
+              } } >Siguientes</button>
+            )
+          }
         </div>
         )
       }
+        <h2>Paginas: { countPage }/{ Math.ceil(total / 5) }</h2>
+        </div>
+
     </div>
   )
 }

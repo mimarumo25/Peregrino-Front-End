@@ -9,12 +9,15 @@ import { getReclusoAll } from "../../store/slices/recluso/reclusoSlices";
 import { MatriculaModal, MatriculaModalEdit } from "../modal";
 
 import { LoaderSpinner } from "../";
+import jsPDF from "jspdf";
+import autoTable from 'jspdf-autotable';
 
 export const Matricula = () => {
   const dispatch = useDispatch();
   const [modalShow, setModalShow] = useState(false);
   const [modalShowE, setModalShowE] = useState(false);
   const [datosEdit, setDatosEdit] = useState([]);
+  const [ pdfData, setPdfData ] = useState([]);
 
   const [ isLoading, setIsLoading ] = useState( true );
 
@@ -24,83 +27,33 @@ export const Matricula = () => {
     dispatch(deleteMatricula( id ));
   };
 
-  const mapArray = () => {
-    let mat = [];
+  const setAllMatriculasInState = () => {
 
-    let newMat = matriculas.map((matricula, index) => {
-      // console.log({ matricula });
-      return (
-        <tr key={ matricula._id }>
-          {matricula.recluso.map((recluso) => {
-            return (
-              <>
-                <td>{recluso.cedula}</td>
-                <td>{recluso.nombres}</td>
-                <td>{recluso.apellidos}</td>
-                {matricula.leccion.map((leccion) => {
-                  return (
-                    <>
-                      <td>{leccion.programa[0].nombre}</td>
-                      <td>{leccion.nombre}</td>
-                      <td>{ leccion.nivel ? `${ leccion.nivel }` : 'NA' }</td>
-                      <td>
-                        {new Date(matricula.createdAt).toLocaleDateString()}
-                      </td>
-                      <td>{  matricula.estado[0] ? matricula.estado[0].name : 'NA' }</td>
-                      <td>
-                        <div className="col-2">
-                          <button
-                            onClick={() =>
-                              modalEditMatricula(
-                                recluso.cedula,
-                                recluso.nombres,
-                                recluso.apellidos,
-                                leccion.nombre,
-                                leccion.programa[0].nombre,
-                                matricula.estado[0] ? matricula.estado[0].name : 'NA',
-                                leccion.nivel ? leccion.nivel : 'NA',
-                                matricula.estado[0] ? matricula.estado[0]._id : 'NA',
-                                matricula._id
-                              )
-                            }
-                            data-backdrop="static"
-                            data-keyboard="false"
-                            className="btn btn-warning w-10"
-                            type="button"
-                            tabIndex="0"
-                            data-bs-toggle="tooltip"
-                            data-bs-placement="top"
-                            title="Matricular"
-                          >
-                            <Icon icon="el:address-book-alt" width="20" />
-                          </button>
-                          <button
-                            type="button"
-                            className="btn btn-danger"
-                            tabIndex="0"
-                            data-bs-toggle="tooltip"
-                            data-bs-placement="top"
-                            title="Eliminar"
-                            onClick={() => eliminarMatricula( matricula._id )}>
-                            <Icon icon="fluent:delete-12-regular" width="20" />
-                          </button>
-                        </div>
-                      </td>
-                    </>
-                  );
-                })}
-              </>
-            );
-          })}
-        </tr>
-      );
-    });
+      if ( pdfData.length === 0 && (pdfData.length < matriculas.length) && !isLoading ) {
+        matriculas.forEach(( matricula, index ) => {
+          matricula.recluso.forEach(( recluso ) => {
+            matricula.leccion.forEach(( leccion ) => {
+              setPdfData(( prev ) => {
+                return (
+                  [ ...prev,{
+                    cedula: recluso.cedula,
+                    nombre: recluso.nombres,
+                    apellido: recluso.apellidos,
+                    programa: leccion.programa[0].nombre,
+                    leccion: leccion.nombre,
+                    nivel: leccion.nivel ? leccion.nivel : 'NA',
+                    fecha: leccion.nivel ? leccion.nivel : 'NA',
+                    estado: matricula.estado[0] ? matricula.estado[0].name : 'NA',
+                    estadoId: matricula.estado[0] ? matricula.estado[0]._id : 'NA',
+                    matriculaId: matricula._id
+                  }]
+                )
+              })
+            })
+          })
+        });
+      }
 
-    newMat.forEach((item) => {
-      mat.push(item);
-    });
-
-    return mat;
   };
 
   useEffect(() => {
@@ -112,7 +65,7 @@ export const Matricula = () => {
   }, [ dispatch ]);
 
   useEffect(() => {
-    mapArray();
+    setAllMatriculasInState();
   }, [ matriculas ]);
 
   const modalNewMatricula = () => {
@@ -129,9 +82,64 @@ export const Matricula = () => {
     estadoId = '',
     matriculaId = ''
   ) => {
-    setModalShowE(true);
     setDatosEdit({ cedula, nombres, apellidos, leccion, programa, estado, nivel, estadoId, matriculaId });
+    setModalShowE(true);
   };
+
+  const createPdf = () => {
+    
+    const doc = new jsPDF();
+    const logo = new Image();
+    logo.src = '../../../public/assets/logo.jpeg';
+
+    doc.setFont('helvetica', 'bold');
+    //text hello
+    doc.setFontSize(16);
+    doc.setTextColor(0, 0, 0);
+    doc.text(
+      `Listado General De Matriculas`,
+      60,
+      35,
+    );
+
+    doc.addImage(
+      './assets/logo.jpeg',
+      45,
+      0,
+      0,
+      0
+    );
+
+    autoTable(doc, {
+      head: [['Cedula', 'Nombre', 'Apellido', 'Programa', 'Leccion', 'Nivel', 'Fecha', 'Estado' ]],
+      body: pdfData.map( celda => (
+        [ celda.cedula, celda.nombre, celda.apellido, celda.programa, celda.leccion, celda.nivel, new Date(celda.fecha).toLocaleDateString(), celda.estado ]
+        )),
+      margin: {
+        top: 42, right: 14, bottom: 20, left: 14
+      }
+      
+    });
+
+    doc.setFont('helvetica', 'normal');
+    //text hello
+    doc.setFontSize(14);
+    doc.setTextColor(1, 1, 1);
+
+    doc.text(
+      `Teléfono: +57 323 5909324`,
+      10,
+      280,
+    );
+
+    doc.text(
+      `Dirección: Calle 24 Cra 11 y 12 - Barrio margaritas diagonal a la cancha`,
+      10,
+      290,
+    );
+
+    doc.save('tabla.pdf');
+  }
 
   return (
     <div>
@@ -173,61 +181,77 @@ export const Matricula = () => {
             <th>Acciones</th>
           </tr>
         </thead>
-        <tbody>{ (matriculas.length > 0 && !isLoading ) && mapArray() }</tbody>
+        {/* <tbody>{ (matriculas.length > 0 && !isLoading ) && mapArray() }</tbody> */}
+        <tbody>{ ( matriculas.length > 0 && !isLoading ) && (
+          pdfData.map( ( celda, index) => (
+            <tr key={ celda.matriculaId }>
+            <td>{celda.cedula}</td>
+            <td>{celda.nombre}</td>
+            <td>{celda.apellido}</td>
+                  <td>{celda.programa}</td>
+                  <td>{celda.leccion}</td>
+                  <td>{celda.nivel ? `${ celda.nivel }` : 'NA' }</td>
+                  <td>{new Date(celda.fecha).toLocaleDateString()}</td>
+                  <td>{celda.estado ? celda.estado : 'NA' }</td>
+                  <td>
+                  <div className="col-2">
+                           <button
+                            onClick={() =>
+
+                              modalEditMatricula(
+                                celda.cedula,
+                                celda.nombre,
+                                celda.apellido,
+                                celda.leccion,
+                                celda.programa,
+                                celda.estado ? celda.estado : 'NA',
+                                celda.nivel ? celda.nivel : 'NA',
+                                celda.estado ? celda.estadoId : 'NA',
+                                celda.matriculaId
+                              )
+                            }
+                            data-backdrop="static"
+                            data-keyboard="false"
+                            className="btn btn-warning w-10"
+                            type="button"
+                            tabIndex="0"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top"
+                            title="Matricular"
+                          >
+                            <Icon icon="el:address-book-alt" width="20" />
+                          </button>
+                          <button
+                            type="button"
+                            className="btn btn-danger"
+                            tabIndex="0"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top"
+                            title="Eliminar"
+                            onClick={() => eliminarMatricula( celda.matriculaId )}>
+                            <Icon icon="fluent:delete-12-regular" width="20" />
+                          </button>
+                        </div>
+                  </td>
+    </tr>  
+          )
+        )
+        )
+      }
+        </tbody>
       </Table>
 
       {
         ( isLoading && matriculas.length === 0 ) && <LoaderSpinner />
+      }
+
+      {
+        ( !isLoading && matriculas.length !== 0 ) && <button 
+        className="btn btn-primary"
+        onClick={ createPdf }>Descargar Pdf</button>
       }
     </div>
   );
 };
 
 export default Matricula;
-
-
-
-
-/* 
-matricula.recluso.map((recluso) =>
-                                matricula.leccion.map((leccion) =>
-                                    leccion.programa.map((programa) =>
-                                        matricula.estado.map((estado) =>
-                                            <tr key={matricula._id}>
-                                                <td>{recluso.cedula}</td>
-                                                <td>{recluso.nombres}</td>
-                                                <td>{recluso.apellidos}</td>
-                                                <td>{programa.nombre}</td>
-                                                <td>{leccion.nombre}</td>
-                                                <td>{new Date(matricula.createdAt).toLocaleDateString()}</td>
-                                                <td>{estado.name}</td>
-                                                <td>
-                                                    <div className='col-2'>
-                                                        <button
-                                                            onClick={() => modalEditMatricula(
-                                                                recluso.cedula,
-                                                                recluso.nombres,
-                                                                recluso.apellidos,
-                                                                leccion,
-                                                                programa.nombre,
-                                                                estado.name
-                                                            )}
-                                                            data-backdrop="static"
-                                                            data-keyboard="false"
-                                                            className='btn btn-warning w-10'
-                                                            type="button"
-                                                            tabIndex="0"
-                                                            data-bs-toggle="tooltip"
-                                                            data-bs-placement="top"
-                                                            title="Matricular"
-                                                        >
-                                                            <Icon icon="el:address-book-alt" width="20" />
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        )
-                                    )
-                                )
-
-*/

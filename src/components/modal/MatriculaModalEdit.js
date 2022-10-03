@@ -47,6 +47,7 @@ export const MatriculaModalEdit = ( props ) => {
 
           if( leccion ) {
           const data = lecciones.filter(l => l.nombre !== leccion );
+          console.log({ data });
           setLeccionDatos(data);
           }
 
@@ -141,8 +142,8 @@ export const MatriculaModalEdit = ( props ) => {
                                             >
                                                 <option value={ leccion }>{`Nivel ${ nivel } - Programa ${ pro } - Lección ${ leccion }`}</option>
                                                 {
-                                                    leccionDatos ? leccionDatos.map(( lec, index ) => (
-                                                        <option key={ index } value={ lec.nombre }>{`Nivel ${ leccion.nivel } - Programa ${ lec.programa[0].nombre } - Lección ${ lec.nombre }`}</option>
+                                                    leccionDatos.length > 0 ? leccionDatos.map(( lec, index ) => (
+                                                        <option key={ index } value={ lec?.nombre }>{`Nivel ${ leccion?.nivel } - Programa ${ lec?.programa[0]?.nombre } - Lección ${ lec?.nombre }`}</option>
                                                     )) : <h2>Loading</h2>
                                                 }
                                             </Field>

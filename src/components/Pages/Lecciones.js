@@ -17,6 +17,7 @@ export const Lecciones = () => {
   const [leccionEdit, setLeccionEdit] = useState({});
   const { list: lecciones, total } = useSelector((store) => store.leccionList);
   const [desde, setDesde] = useState(0);
+  const [countPage, setCountPage] = useState(1);
 
   const [value, setValue] = useState("");
 
@@ -80,7 +81,8 @@ export const Lecciones = () => {
 
   return (
     <div>
-      <h2>{ ( desde < 0 ) ? 0 : desde }/{ total }</h2>
+      {/* <h2>{ ( desde < 0 ) ? 0 : desde }/{ total }</h2> */}
+
       <LeccionModal
         show={modalShow}
         title={titleModal}
@@ -173,20 +175,34 @@ export const Lecciones = () => {
         </tbody>
       </table>
 
+      <div className="d-flex align-items-center justify-content-between mt-4">
+
       {/* PAGINATION */}
       {
         value.length === 0 && (
         <div className='actions d-flex gap-2'>
           {
-            desde > 0 && <button className='btn btn-secondary' onClick={ () => cambiarPagina( -5 ) }>Previos</button>
+            desde > 0 && <button className='btn btn-secondary' onClick={ () => {
+              cambiarPagina( -5 );
+              setCountPage( prev => prev - 1 );
+            }}>Previos</button>
           }
           {
-            ( total > 5 ) && <button className='btn btn-secondary' onClick={ () => cambiarPagina( 5 ) } >Siguientes</button>
+            !(countPage >= Math.ceil(total / 5)) && (
+              <button className='btn btn-secondary' onClick={ () => {
+                cambiarPagina( 5 );
+                setCountPage( prev => prev + 1 );
+              } } >Siguientes</button>
+            )
           }
         </div>
         )
       }
       {/* PAGINATION */}
+        <div>
+          <h3>Paginas: { countPage }/{ Math.ceil(total / 5) }</h3>
+        </div>
+      </div>
     </div>
   );
 };

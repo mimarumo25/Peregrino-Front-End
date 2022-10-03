@@ -70,7 +70,6 @@ export const Programas = () => {
 
     return (
         <div>
-            <h2>{ ( desde < 0 ) ? 0 : desde }/{ total }</h2>
             <ProgramaModal
                 show={modalShow}
                 title={titleModal}
@@ -150,6 +149,8 @@ export const Programas = () => {
                     }
                 </tbody>
             </table>
+            <div className='d-flex align-items-center justify-content-between mt-4'>
+
             {/* PAGINATION */}
 {
         value.length === 0 && (
@@ -164,6 +165,8 @@ export const Programas = () => {
         )
       }
       {/* PAGINATION */}
+          <h3>Paginas: { Math.ceil(total / 5) }</h3>
+        </div>
         </div>
     )
 }
