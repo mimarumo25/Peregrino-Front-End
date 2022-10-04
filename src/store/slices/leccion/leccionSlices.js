@@ -27,9 +27,9 @@ export const { setLeccionList, setLeccionTotal } = leccionSlice.actions;
 
 export default leccionSlice.reducer;
 
-export const getLeccionAll = ( desde ) => async (dispatch) => {
+export const getLeccionAll = ( desde = 0, hasta = 0 ) => async (dispatch) => {
   try {
-    await axios.get(url + `lecciones?desde=${ desde }`)
+    await axios.get(url + `lecciones?desde=${ desde }&hasta=${ hasta }`)
       .then(res => {
         dispatch(setLeccionList(res.data.lecciones));
         dispatch(setLeccionTotal(res.data.total));

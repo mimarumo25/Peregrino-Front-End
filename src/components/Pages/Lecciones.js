@@ -8,7 +8,7 @@ import {
   getLeccionAll,
   searchLecciones,
 } from "../../store/slices/leccion/leccionSlices";
-import { LeccionModal } from "../modal";
+import { LeccionModal  } from "../modal";
 
 export const Lecciones = () => {
   const dispatch = useDispatch();
@@ -81,8 +81,6 @@ export const Lecciones = () => {
 
   return (
     <div>
-      {/* <h2>{ ( desde < 0 ) ? 0 : desde }/{ total }</h2> */}
-
       <LeccionModal
         show={modalShow}
         title={titleModal}

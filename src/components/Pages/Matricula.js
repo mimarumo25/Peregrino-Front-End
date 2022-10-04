@@ -18,6 +18,7 @@ export const Matricula = () => {
   const [modalShowE, setModalShowE] = useState(false);
   const [datosEdit, setDatosEdit] = useState([]);
   const [ pdfData, setPdfData ] = useState([]);
+  const [value, setValue] = useState('');
 
   const [ isLoading, setIsLoading ] = useState( true );
 
@@ -26,6 +27,11 @@ export const Matricula = () => {
   const eliminarMatricula = ( id ) => {
     dispatch(deleteMatricula( id ));
   };
+
+  const handleChange = (e) => {
+    const value = e.target.value;
+    setValue( value );
+  }
 
   const setAllMatriculasInState = () => {
 
@@ -117,19 +123,31 @@ export const Matricula = () => {
         )),
       margin: {
         top: 42, right: 14, bottom: 20, left: 14
-      }
+      },
+      theme: 'grid',
+          headStyles :{ halign: 'center', fillColor: '#8f0000' },
+          columnStyles: {
+            0: {halign: 'center', },
+            1: {halign: 'center', },
+            2: {halign: 'center', },
+            3: {halign: 'center', },
+            4: {halign: 'center', },
+            5: {halign: 'center', },
+            6: {halign: 'center', },
+            7: {halign: 'center', }
+          },
       
     });
 
     doc.setFont('helvetica', 'normal');
     //text hello
-    doc.setFontSize(14);
+    doc.setFontSize(8);
     doc.setTextColor(1, 1, 1);
 
     doc.text(
       `Teléfono: +57 323 5909324`,
       10,
-      280,
+      285,
     );
 
     doc.text(
@@ -156,7 +174,7 @@ export const Matricula = () => {
         keyboard={false}
         data={ datosEdit }
       />
-      <div className="py-2">
+      <div className="py-2 px-3 d-flex align-items-center justify-content-between">
         <button
           onClick={modalNewMatricula}
           data-backdrop="static"
@@ -166,6 +184,26 @@ export const Matricula = () => {
         >
           <Icon icon="el:address-book-alt" width="20" /> Nueva Matricula
         </button>
+
+      <div style={{
+        width: '300px'
+      }}>
+       <div className="input-group">
+            <input
+              type="search"
+              className="form-control"
+              onChange={handleChange}
+              placeholder={`Buscar Matricula por nombre`}
+              value={value}
+              aria-label="Buscar..."
+              aria-describedby="search-addon"
+            />
+            <button className="input-group-text border-0" id="search-addon">
+              <Icon icon="akar-icons:search" color="white" width="20" />
+            </button>
+          </div>
+      </div>
+        
       </div>
       <Table responsive striped>
         <thead>
@@ -183,7 +221,8 @@ export const Matricula = () => {
         </thead>
         {/* <tbody>{ (matriculas.length > 0 && !isLoading ) && mapArray() }</tbody> */}
         <tbody>{ ( matriculas.length > 0 && !isLoading ) && (
-          pdfData.map( ( celda, index) => (
+          pdfData.filter( data => data.cedula.includes( value ) )
+          .map( ( celda, index) => (
             <tr key={ celda.matriculaId }>
             <td>{celda.cedula}</td>
             <td>{celda.nombre}</td>
@@ -246,7 +285,8 @@ export const Matricula = () => {
       }
 
       {
-        ( !isLoading && matriculas.length !== 0 ) && <button 
+        ( !isLoading && matriculas.length !== 0 && pdfData.filter( data => data.cedula.includes( value ).length > 0 ) ) 
+        && <button 
         className="btn btn-primary"
         onClick={ createPdf }>Descargar Pdf</button>
       }
