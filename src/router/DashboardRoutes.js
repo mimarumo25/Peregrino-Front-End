@@ -2,6 +2,7 @@ import { Home } from "../components";
 import { Dashboard, Informes, Internos, Lecciones, Usuarios, Programas, Matricula } from "../components/Pages";
 
 import { Routes, Route, Navigate } from "react-router-dom";
+import { SalidaRecluso } from "../components/Pages/SalidaRecluso";
 
 export const DashboardRoutes = () => {
 
@@ -15,6 +16,7 @@ export const DashboardRoutes = () => {
           <Route path="/programas" element={<Programas />} />
           <Route path="/lecciones" element={<Lecciones />} />
           <Route path="/matriculas" element={<Matricula />} />
+          <Route path="/salidas" element={<SalidaRecluso/>} />
           <Route path="/informes" element={<Informes />} />
         </Route>
         <Route path="*" element={<Navigate to="/" />} />

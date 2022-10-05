@@ -6,6 +6,7 @@ import reclusoList from './slices/recluso/reclusoSlices'
 import leccionList from './slices/leccion/leccionSlices'
 import progamaList from './slices/programa/programaSlices'
 import matriculaList from './slices/matricula/matriculasSlices'
+import salidaReclusosList from './slices/salidaRecluso/salidaReclusoSlices'
 
 export default configureStore({
     reducer: {
@@ -15,7 +16,8 @@ export default configureStore({
         reclusoList,
         leccionList,
         progamaList,
-        matriculaList,        
+        matriculaList,
+        salidaReclusosList       
     }
 }
 )
