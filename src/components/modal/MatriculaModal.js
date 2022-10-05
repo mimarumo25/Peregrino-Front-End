@@ -61,7 +61,7 @@ export const MatriculaModal = (props) => {
                 <Modal.Body>
                     <div className='container'>
                         <div className='row'>
-                            <div className='col-4'>
+                            <div className='col-6'>
                                 <label htmlFor="name" className='form-label'>Buscar por Identificación</label>
                                 <InputGroup >
                                     <InputGroup.Text id="basic-addon1">
@@ -99,7 +99,7 @@ export const MatriculaModal = (props) => {
                             {({ values, errors, touched, handleChange, handleBlur }) => (
 
                                 <Form>
-                                    <div className='row'>
+                                    <div className='row d-flex flex-column flex-sm-row'>
                                         <div className='col'>
                                             <b>
                                                 <label htmlFor="cedula" className="form-label">Cedula:</label>

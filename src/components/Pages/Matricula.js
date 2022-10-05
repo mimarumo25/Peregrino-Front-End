@@ -160,7 +160,7 @@ export const Matricula = () => {
   }
 
   return (
-    <div>
+    <div className="section">
       <MatriculaModal
         show={modalShow}
         onHide={() => setModalShow(false)}
@@ -174,7 +174,7 @@ export const Matricula = () => {
         keyboard={false}
         data={ datosEdit }
       />
-      <div className="py-2 px-3 d-flex align-items-center justify-content-between">
+      <div className="py-2 px-1 d-flex align-items-center justify-content-between">
         <button
           onClick={modalNewMatricula}
           data-backdrop="static"
@@ -205,7 +205,9 @@ export const Matricula = () => {
       </div>
         
       </div>
-      <Table responsive striped>
+      <Table responsive striped style={{
+        minWidth: '100%'
+      }}>
         <thead>
           <tr>
             <th>Cedula</th>
@@ -233,7 +235,7 @@ export const Matricula = () => {
                   <td>{new Date(celda.fecha).toLocaleDateString()}</td>
                   <td>{celda.estado ? celda.estado : 'NA' }</td>
                   <td>
-                  <div className="col-2">
+                  <div className="col-2 d-flex gap-2">
                            <button
                             onClick={() =>
 

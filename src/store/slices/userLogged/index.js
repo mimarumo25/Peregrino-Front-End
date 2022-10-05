@@ -37,6 +37,7 @@ export const loginEmailPassword = (email, password) => {
         })
         .catch(function (error) {
           console.error("Error en la consulta : " + error);
+          Swal.fire("Error!", "Contraseña o email incorrecto!", "error");
         });
     };
   };

@@ -59,14 +59,8 @@ export const UserModal = (props) => {
                             <Card className="my-3">
                                 <Card.Header>Datos Personales</Card.Header>
                                 <Card.Body>
-                                    <div className="row">
-                                        <input
-                                            name="createUpdate"
-                                            id="createUpdate"
-                                            type="checkbox"
-                                            className="d-none d-lg-block"
-                                        />
-                                        <div className="col-4">
+                                    <div className="row d-flex flex-column flex-sm-row">
+                                        <div className="col col-sm-4">
                                             <b>
                                                 <label htmlFor="identifica">Identificación:</label>
                                             </b>
@@ -81,7 +75,7 @@ export const UserModal = (props) => {
                                                 <div className="text-danger">{errors.identifica}</div>
                                             ) : null}
                                         </div>
-                                        <div className="col-4">
+                                        <div className="col col-sm-4">
                                             <b>
                                                 <label htmlFor="nombres">Nombres:</label>
                                             </b>
@@ -95,7 +89,7 @@ export const UserModal = (props) => {
                                                 <div className="text-danger">{errors.nombres}</div>
                                             ) : null}
                                         </div>
-                                        <div className="col-4">
+                                        <div className="col col-sm-4">
                                             <b>
                                                 <label htmlFor="apellidos">Apellidos:</label>
                                             </b>
@@ -110,8 +104,8 @@ export const UserModal = (props) => {
                                             ) : null}
                                         </div>
                                     </div>
-                                    <div className="row my-2">
-                                        <div className="col-4">
+                                    <div className="row my-2 d-flex flex-column flex-sm-row">
+                                        <div className="col col-sm-4">
                                             <b>
                                                 <label htmlFor="telefono">Teléfono:</label>
                                             </b>
@@ -126,7 +120,7 @@ export const UserModal = (props) => {
                                                 <div className="text-danger">{errors.identifica}</div>
                                             ) : null}
                                         </div>
-                                        <div className="col-4">
+                                        <div className="col col-sm-4">
                                             <b>
                                                 <label htmlFor="email">Email:</label>
                                             </b>
@@ -142,7 +136,7 @@ export const UserModal = (props) => {
                                             ) : null}
                                         </div>
                                         {!_id ?
-                                            <div className="col-4">
+                                            <div className="col col-sm-4">
                                                 <b>
                                                     <label htmlFor="password">
                                                         Contraseña:
@@ -159,7 +153,7 @@ export const UserModal = (props) => {
                                                     <div className="text-danger">{errors.password}</div>
                                                 ) : null}
                                             </div> :
-                                            <div className="col-4">
+                                            <div className="col col-sm-4">
                                                 <b>
                                                     <label htmlFor="roles">Roles:</label>
                                                 </b>
@@ -169,7 +163,7 @@ export const UserModal = (props) => {
                                                     id="roles"
                                                     className="form-control"
                                                 >
-                                                    <option defaultValue={true}>Seleccione una Rol</option>
+                                                    <option defaultValue={true}>Seleccione un Rol</option>
                                                     {Array.isArray(props.roles) ? props.roles.map((rol, i) =>
                                                         <option key={i} value={rol.name}>{rol.name}</option>
                                                     ) : null
@@ -183,9 +177,9 @@ export const UserModal = (props) => {
 
                                     </div>
                                     {!_id ?
-                                        <div className="row my-2">
+                                        <div className="row my-2 d-flex flex-column flex-sm-row">
 
-                                            <div className="col-4">
+                                            <div className="col col-sm-6">
                                                 <b>
                                                     <label htmlFor="repitPassword">
                                                         Confirmar Contraseña:
@@ -202,7 +196,7 @@ export const UserModal = (props) => {
                                                     <div className="error">{errors.repitPassword}</div>
                                                 ) : null}
                                             </div>
-                                            <div className="col-4">
+                                            <div className="col col-sm-6">
                                                 <b>
                                                     <label htmlFor="roles">Roles:</label>
                                                 </b>
@@ -212,7 +206,7 @@ export const UserModal = (props) => {
                                                     id="roles"
                                                     className="form-control"
                                                 >
-                                                    <option defaultValue={true}>Seleccione una Rol</option>
+                                                    <option defaultValue={true}>Seleccione un Rol</option>
                                                     {
                                                         Array.isArray(props.roles) ? props.roles.map((rol, i) =>
                                                             <option key={i} value={rol.name}>{rol.name}</option>

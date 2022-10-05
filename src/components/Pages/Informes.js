@@ -75,9 +75,9 @@ export const Informes = () => {
         backdrop="static"
         keyboard={false}
       />
-      <div className='container d-flex flex-column justify-content-center align-items-center gap-4'>
+      <div className='container d-flex flex-column justify-content-center align-items-center gap-4 '>
         <h1>Informes</h1>
-        <button className="btn btn-primary col-4 rounded-2 p-3"
+        <button className="btn btn-primary col-6 rounded-2 p-3 d-flex flex-wrap justify-content-center align-items-center gap-3"
           style={{
             display: 'flex',
             alignItems: 'center',

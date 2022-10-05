@@ -23,7 +23,6 @@ export const NavBarM = (args) => {
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="me-auto">
-
                     </Nav>
                     <Nav className='sidebarm'>
                         <ul className='row'>
