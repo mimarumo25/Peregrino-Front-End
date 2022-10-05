@@ -53,8 +53,8 @@ export const ReclusoModal = (props) => {
                     >
                         {({ errors, touched }) => (
                             <Form>
-                                <div className="row">
-                                    <div className="col-6">
+                                <div className="row d-flex flex-column flex-sm-row">
+                                    <div className="col col-sm-6">
                                         <b>
                                             <label htmlFor="cedula">Cedula:</label>
                                         </b>
@@ -69,7 +69,7 @@ export const ReclusoModal = (props) => {
                                             <div className="text-danger">{errors.cedula}</div>
                                         ) : null}
                                     </div>
-                                    <div className="col-6">
+                                    <div className="col col-sm-6">
                                         <b>
                                             <label htmlFor="nombres">Nombres:</label>
                                         </b>
@@ -85,8 +85,8 @@ export const ReclusoModal = (props) => {
                                     </div>
 
                                 </div>
-                                <div className='row'>
-                                    <div className="col-6">
+                                <div className='row d-flex flex-column flex-sm-row'>
+                                    <div className="col col-sm-6">
                                         <b>
                                             <label htmlFor="apellidos">Apellidos:</label>
                                         </b>
@@ -100,7 +100,7 @@ export const ReclusoModal = (props) => {
                                             <div className="text-danger">{errors.apellidos}</div>
                                         ) : null}
                                     </div>
-                                    <div className="col-6">
+                                    <div className="col col-sm-6">
                                         <b>
                                             <label htmlFor="nit">Nit:</label>
                                         </b>
@@ -116,8 +116,8 @@ export const ReclusoModal = (props) => {
                                         ) : null}
                                     </div>
                                 </div>
-                                <div className="row">
-                                    <div className="col-6">
+                                <div className="row d-flex flex-column flex-sm-row">
+                                    <div className="col col-sm-6">
                                         <b>
                                             <label htmlFor="celda">Celda:</label>
                                         </b>
@@ -131,7 +131,7 @@ export const ReclusoModal = (props) => {
                                             <div className="text-danger">{errors.celda}</div>
                                         ) : null}
                                     </div>
-                                    <div className="col-6">
+                                    <div className="col col-sm-6">
                                         <b>
                                             <label htmlFor="patio">Patio:</label>
                                         </b>
