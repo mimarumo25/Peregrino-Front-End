@@ -23,8 +23,7 @@ export const getSalidaReclusoAll = (desde) => async (dispatch) => {
     try {
         await axios.get(url + `salidaReclusos`)
             .then(res => {
-                dispatch(setSalidaReclusoList(res.data.salidasRecluso));
-                
+                dispatch(setSalidaReclusoList(res.data));                
             })
     } catch (error) {
         console.log(`Error: ${error}`);

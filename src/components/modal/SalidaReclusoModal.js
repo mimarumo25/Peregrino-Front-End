@@ -4,14 +4,17 @@ import * as Yup from 'yup';
 import { useSelector } from 'react-redux';
 import { Icon } from '@iconify/react';
 import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { url } from '../../helpers/auth-token';
 
 export const SalidaReclusoModal = (props) => {
-
+    const { id, cedula: ced, nombre, apellido, telefono, direccion, Fecha_salida, tipoSalida, observacion } = props.data;
     const { list: reclusos } = useSelector(store => store.reclusoList);
+    const [tipoSalidas, setTipoSalidas] = useState({});
     const [resulData, setResulData] = useState([]);
-    const [cedula, setCedula] = useState("");
-    const [nombreCompleto, setnombreCompleto] = useState("");
-  
+    const [cedula, setCedula] = useState(ced);
+    const [nombreCompleto, setnombreCompleto] = useState(nombre + " " + apellido);
+
     const validationReclusoSchema = Yup.object().shape({
         cedula: Yup.number().required("Requerido*"),
         nombres: Yup.string().required("Requerido*"),
@@ -20,9 +23,21 @@ export const SalidaReclusoModal = (props) => {
         salida: Yup.string().required("Requerido*"),
         observacion: Yup.string().required("Requerido*"),
         fecha: Yup.date().required("")
-      
-    });
 
+    });
+    useEffect(() => {
+        const cargaTipoSalida = async () => {
+            try {
+                await axios.get(url + `estado/tiposalida`)
+                    .then(res => {
+                        setTipoSalidas(res.data)
+                    })
+            } catch (error) {
+                console.log(`Error: ${error}`);
+            }
+        }
+        cargaTipoSalida();
+    }, [tipoSalida]);
     const handleChange = ({ target }) => {
         const { value } = target
         const data = reclusos.filter(p => p.cedula.includes(value))
@@ -50,7 +65,7 @@ export const SalidaReclusoModal = (props) => {
                 <Modal.Header closeButton>
                     <Modal.Title id="contained-modal-title-vcenter"
                     >
-                        Registrar Salida del Recluso
+                        {props.title}
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
@@ -62,13 +77,16 @@ export const SalidaReclusoModal = (props) => {
                                     <InputGroup.Text id="basic-addon1">
                                         <Icon icon="el:search-alt" width="30" />
                                     </InputGroup.Text>
-                                    <input
-                                        type="text"
-                                        className='form-control'
-                                        placeholder='Identificación'
-                                        name='busqueda'
-                                        onChange={handleChange}
-                                    />
+                                    {id ? null :
+                                        <input
+                                            type="text"
+                                            className='form-control'
+                                            placeholder='Identificación'
+                                            name='busqueda'
+                                            onChange={handleChange}
+                                        />
+
+                                    }
                                 </InputGroup>
                             </div>
                         </div>
@@ -76,22 +94,21 @@ export const SalidaReclusoModal = (props) => {
                             initialValues={{
                                 cedula: cedula,
                                 nombres: nombreCompleto,
-                                telefono: "",
-                                direccion: "",
-                                fecha: "",
-                                salida: "",
-                                observacion: ""
+                                telefono: telefono || "",
+                                direccion: direccion || "",
+                                fecha: Fecha_salida || "",
+                                salida: tipoSalida || "",
+                                observacion: observacion || ""
                             }}
                             enableReinitialize
                             validationSchema={validationReclusoSchema}
                             onSubmit={(values, { resetForm }) => {
-                                const { nombres, ...rest } = values;
+                                const { nombres, ...rest } = values
+                                if (id) {
 
-                                alert(JSON.stringify(values));
+                                } else{
 
-
-                                console.log({ rest });
-                                /* dispatch(addMatricula(rest));*/
+                                }                         
                                 setCedula('')
                                 setnombreCompleto('')
                                 resetForm()
@@ -200,12 +217,10 @@ export const SalidaReclusoModal = (props) => {
                                                 className="form-control"
                                             >
                                                 <option defaultValue={true}>Seleccione Tipo Salida</option>
-                                                <option value={"1000"}>Seleccione Tipo Salida</option>
-                                                {/*Array.isArray(lecciones) ? lecciones.map((leccion, i) =>
-                                                    leccion.programa.map((pro, i) =>
-                                                        <option key={i} value={leccion.nombre}>{`Nivel ${leccion.nivel} - ${pro.nombre} - Lección ${leccion.nombre}`}</option>
-                                                    )
-                                                ) : null*/
+
+                                                {Array.isArray(tipoSalidas) ? tipoSalidas.map((tipo) =>
+                                                    <option key={tipo._id} value={tipo._id}>{tipo.name}</option>
+                                                ) : null
                                                 }
                                             </Field>
                                             {errors.salida && touched.salida ? (
