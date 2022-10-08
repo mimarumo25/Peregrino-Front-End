@@ -5,7 +5,6 @@ import { deleteRecluso, getReclusoAll, searchReclusos } from '../../store/slices
 import { ReclusoModal } from '../modal';
 import { Icon } from '@iconify/react';
 import { Button } from 'react-bootstrap';
-import { Search } from '../Search';
 
 export const Internos = () => {
   const dispatch = useDispatch()
@@ -131,12 +130,12 @@ export const Internos = () => {
           {Array.isArray(reclusos) ?
             reclusos.map((recluso) =>
               <tr key={recluso._id}>
-                <td>{recluso.cedula}</td>
-                <td>{recluso.nombres}</td>
-                <td>{recluso.apellidos}</td>
-                <td>{recluso.nit}</td>
-                <td>{recluso.celda}</td>
-                <td>{recluso.patio}</td>
+                <td>{recluso?.cedula}</td>
+                <td>{recluso?.nombres}</td>
+                <td>{recluso?.apellidos}</td>
+                <td>{recluso?.nit}</td>
+                <td>{recluso?.celda}</td>
+                <td>{recluso?.patio}</td>
                 <td className="d-grid gap-2 d-md-flex justify-content-md-end">
                   <button
                     type="button"

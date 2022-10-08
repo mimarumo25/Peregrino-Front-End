@@ -27,21 +27,21 @@ export const Informes = () => {
 
   const setDataRegistros = () => {
     if ( registros.length === 0 && (registros.length < matriculas.length) ) {
-      matriculas.forEach(( matricula, index ) => {
-        matricula.recluso.forEach(( recluso ) => {
-          matricula.leccion.forEach(( leccion ) => {
+      matriculas?.forEach(( matricula, index ) => {
+        matricula?.recluso.forEach(( recluso ) => {
+          matricula?.leccion.forEach(( leccion ) => {
             setRegistros(( prev ) => {
               return (
                 [ ...prev,{
-                  cedula: recluso.cedula,
-                  nombre: recluso.nombres,
-                  apellido: recluso.apellidos,
-                  programa: leccion.programa[0].nombre,
-                  leccion: leccion.nombre,
-                  nivel: leccion.nivel ? leccion.nivel : 'NA',
-                  estado: matricula.estado[0] ? matricula.estado[0].name : 'NA',
-                  estadoId: matricula.estado[0] ? matricula.estado[0]._id : 'NA',
-                  matriculaId: matricula._id
+                  cedula: recluso?.cedula,
+                  nombre: recluso?.nombres,
+                  apellido: recluso?.apellidos,
+                  programa: leccion?.programa[0]?.nombre,
+                  leccion: leccion?.nombre,
+                  nivel: leccion?.nivel ? leccion?.nivel : 'NA',
+                  estado: matricula?.estado[0] ? matricula?.estado[0]?.name : 'NA',
+                  estadoId: matricula?.estado[0] ? matricula?.estado[0]?._id : 'NA',
+                  matriculaId: matricula?._id
                 }]
               )
             })
@@ -50,7 +50,6 @@ export const Informes = () => {
       });
     }
 
-      console.log({ registros });
   }
 
 
@@ -77,7 +76,8 @@ export const Informes = () => {
       />
       <div className='container d-flex flex-column justify-content-center align-items-center gap-4 '>
         <h1>Informes</h1>
-        <button className="btn btn-primary col-6 rounded-2 p-3 d-flex flex-wrap justify-content-center align-items-center gap-3"
+        <div className='col'>
+        <button className="btn btn-primary rounded-2 p-3 d-flex flex-wrap justify-content-center align-items-center gap-3"
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -88,6 +88,20 @@ export const Informes = () => {
           <Icon icon="bi:pass" width="40" height="40" color='white' />
           Generar Asistencia Por Leccion
         </button>
+        </div>
+        <div className='col'>
+        <button className="btn btn-primary rounded-2 p-3 d-flex flex-wrap justify-content-center align-items-center gap-3"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '.4rem'
+          }}
+          onClick={ modalNewLeccion }
+        >
+          <Icon icon="bi:pass" width="40" height="40" color='white' />
+          Generar Asistencia Por Leccion
+        </button>
+        </div>
       </div>
     </div>
   )

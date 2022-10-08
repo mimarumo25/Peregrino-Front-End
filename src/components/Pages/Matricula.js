@@ -42,16 +42,16 @@ export const Matricula = () => {
               setPdfData(( prev ) => {
                 return (
                   [ ...prev,{
-                    cedula: recluso.cedula,
-                    nombre: recluso.nombres,
-                    apellido: recluso.apellidos,
-                    programa: leccion.programa[0].nombre,
-                    leccion: leccion.nombre,
-                    nivel: leccion.nivel ? leccion.nivel : 'NA',
-                    fecha: leccion.nivel ? leccion.nivel : 'NA',
-                    estado: matricula.estado[0] ? matricula.estado[0].name : 'NA',
-                    estadoId: matricula.estado[0] ? matricula.estado[0]._id : 'NA',
-                    matriculaId: matricula._id
+                    cedula: recluso?.cedula,
+                    nombre: recluso?.nombres,
+                    apellido: recluso?.apellidos,
+                    programa: leccion?.programa[0]?.nombre,
+                    leccion: leccion?.nombre,
+                    nivel: leccion?.nivel ? leccion.nivel : 'NA',
+                    fecha: leccion?.nivel ? leccion.nivel : 'NA',
+                    estado: matricula?.estado[0] ? matricula?.estado[0]?.name : 'NA',
+                    estadoId: matricula?.estado[0] ? matricula?.estado[0]?._id : 'NA',
+                    matriculaId: matricula?._id
                   }]
                 )
               })
@@ -226,29 +226,29 @@ export const Matricula = () => {
           pdfData.filter( data => data.cedula.includes( value ) )
           .map( ( celda, index) => (
             <tr key={ celda.matriculaId }>
-            <td>{celda.cedula}</td>
-            <td>{celda.nombre}</td>
-            <td>{celda.apellido}</td>
-                  <td>{celda.programa}</td>
-                  <td>{celda.leccion}</td>
-                  <td>{celda.nivel ? `${ celda.nivel }` : 'NA' }</td>
-                  <td>{new Date(celda.fecha).toLocaleDateString()}</td>
-                  <td>{celda.estado ? celda.estado : 'NA' }</td>
+            <td>{celda?.cedula}</td>
+            <td>{celda?.nombre}</td>
+            <td>{celda?.apellido}</td>
+                  <td>{celda?.programa}</td>
+                  <td>{celda?.leccion}</td>
+                  <td>{celda?.nivel ? `${ celda?.nivel }` : 'NA' }</td>
+                  <td>{new Date(celda?.fecha).toLocaleDateString()}</td>
+                  <td>{celda?.estado ? celda?.estado : 'NA' }</td>
                   <td>
                   <div className="col-2 d-flex gap-2">
                            <button
                             onClick={() =>
 
                               modalEditMatricula(
-                                celda.cedula,
-                                celda.nombre,
-                                celda.apellido,
-                                celda.leccion,
-                                celda.programa,
-                                celda.estado ? celda.estado : 'NA',
-                                celda.nivel ? celda.nivel : 'NA',
-                                celda.estado ? celda.estadoId : 'NA',
-                                celda.matriculaId
+                                celda?.cedula,
+                                celda?.nombre,
+                                celda?.apellido,
+                                celda?.leccion,
+                                celda?.programa,
+                                celda?.estado ? celda.estado : 'NA',
+                                celda?.nivel ? celda.nivel : 'NA',
+                                celda?.estado ? celda.estadoId : 'NA',
+                                celda?.matriculaId
                               )
                             }
                             data-backdrop="static"
