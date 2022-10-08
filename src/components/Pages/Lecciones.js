@@ -133,17 +133,17 @@ export const Lecciones = () => {
         <tbody>
           {Array.isArray(lecciones)
             ? lecciones.map((leccion, i) => (
-                <tr key={leccion._id}>
-                  <td>{leccion.nivel}</td>
-                  <td>{leccion.nombre}</td>
+                <tr key={leccion?._id}>
+                  <td>{leccion?.nivel}</td>
+                  <td>{leccion?.nombre}</td>
                   <td>
-                    {Array.isArray(leccion.programa)
-                      ? leccion.programa.map((programa) => (
-                          <span key={programa._id}>{programa.nombre}</span>
+                    {Array.isArray(leccion?.programa)
+                      ? leccion?.programa.map((programa) => (
+                          <span key={programa?._id}>{programa?.nombre}</span>
                         ))
                       : null}
                   </td>
-                  <td>{leccion.descripcion}</td>
+                  <td>{leccion?.descripcion}</td>
                   <td className="d-grid gap-2 d-md-flex justify-content-md-end">
                     <button
                       type="button"
