@@ -1,9 +1,10 @@
 import { Icon } from '@iconify/react';
 import React, { useEffect, useState } from 'react'
+import { Table } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { getReclusoAll } from '../../store/slices/recluso/reclusoSlices';
-import { getSalidaReclusoAll } from '../../store/slices/salidaRecluso/salidaReclusoSlices';
+import { deleteSalidaRecluso, getSalidaReclusoAll } from '../../store/slices/salidaRecluso/salidaReclusoSlices';
 import SalidaReclusoModal from '../modal/SalidaReclusoModal';
 
 export const SalidaRecluso = () => {
@@ -12,9 +13,12 @@ export const SalidaRecluso = () => {
   const { list: salidaReclusos } = useSelector(store => store.salidaReclusosList);
   const [registros, setRegistros] = useState([]);
   const [modalShow, setModalShow] = useState(false);
-  console.log({salidaReclusos});
+  const [modalTitle, setModalTitle] = useState("");
+  const [dataEdit, setDataEdit] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
   const modalNewSalida = () => {
     setModalShow(true);
+    setDataEdit({})
   };
   /*const handleSearch = (e) => {
     setValue(e.target.value);
@@ -27,75 +31,54 @@ export const SalidaRecluso = () => {
     dispatch(searchLecciones(value));
   };*/
   useEffect(() => {   
+    setIsLoading(true);
     dispatch(getReclusoAll()); 
     dispatch(getSalidaReclusoAll()); 
-    setDataRegistros()
-  }, [ dispatch]);
+    setIsLoading(false);
+  }, [dispatch]);
+useEffect(() => {
+  setDataRegistros()
+}, [salidaReclusos]);
 
-  const paginacionOptions = {
-    rowsPerPageText: 'Filas por Página',
-    rangeSeparatorText: 'de',
-    selectAllRowsItem: true,
-    selectAllRowsItemText: 'Todos'
-}
 const setDataRegistros = () => {
-  if ( registros.length === 0 && (registros.length < salidaReclusos.length) ) {
-    salidaReclusos.forEach(( salidareclusos, index ) => {
-      salidareclusos.recluso.forEach(( recluso ) => {
-        salidareclusos.salida.forEach(( salida ) => {
+  if ( registros.length === 0 && (registros.length < salidaReclusos.length)&& !isLoading ) {
+    console.log("Entra al If");
+    salidaReclusos?.forEach(( salidareclusos, index ) => {    
+      console.log("Tipo Salida :",salidareclusos); 
+      salidareclusos?.recluso?.forEach(( recluso ) => {
+        console.log("Tipo Salida :",recluso);
           setRegistros(( prev ) => {
+            console.log('====================================');
+            console.log(prev);
+            console.log('====================================');
             return (
               [ ...prev,{
-                cedula: recluso.cedula,
-               
-               
+                id:salidareclusos?._id,
+                idRecluso:recluso._id,
+                cedula: recluso?.cedula,
+                nombre: recluso?.nombres,
+                apellido: recluso?.apellidos,
+                direccion: salidareclusos.direccion,
+                telefono: salidareclusos?.telefono,
+                Fecha_salida: salidareclusos?.fechaSalida,
+                tipoSalida:salidareclusos?.salida[0]?.name,
+                observacion: salidareclusos?.observacion,
               }]
+
             )
           })
         })
-      })
-    });
+      });
   }
 }
-/*const columnas = [
-
-    {
-        name: 'NOMBRE',
-        selector: row => row.nombre,
-        sortable: true,
-    },
-    {
-        name: 'DESCRIPCIÓN',
-        selector: row => row.descripcion,
-        sortable: true,
-        grow: 3
-    },
-    {
-        name: 'Acciones',
-        cell: row => <td className="d-grid gap-2 d-md-flex justify-content-md-end">
-            <button
-                type="button"
-                className="btn btn-warning mx-1"
-                data-bs-toggle="tooltip"
-                data-bs-placement="top"
-                title="Editar"
-                onClick={() => modalEditPrograma(row)}
-            >
-                <Icon icon="bx:edit" width="20" />
-            </button>
-            <button
-                type="button"
-                className="btn btn-danger"
-                tabIndex="0"
-                data-bs-toggle="tooltip"
-                data-bs-placement="top"
-                title="Eliminar"
-                onClick={() => eliminarPrograma(row._id)}>
-                <Icon icon="fluent:delete-12-regular" width="20" />
-            </button>
-        </td>
-    }
-]*/
+const modalEditSalida = (registro) => {
+  setDataEdit(registro)
+  setModalTitle("Editar Salida Recluso")
+  setModalShow(true);
+}
+const eliminarSalida = (id) => {
+dispatch(deleteSalidaRecluso(id))
+}
   return (
     <div>
       <SalidaReclusoModal
@@ -103,6 +86,8 @@ const setDataRegistros = () => {
         onHide={() => setModalShow(false)}
         backdrop="static"
         keyboard={false}
+        title={modalTitle}
+        data={dataEdit}
       />
       <div className="py-2">
         <button
@@ -115,7 +100,8 @@ const setDataRegistros = () => {
           <Icon icon="el:address-book-alt" width="20" /> Nueva Salida
         </button>
       </div>
-      {/* SEARCH *
+      {
+      /* SEARCH *
          <form
           style={{
             width: "320px",
@@ -141,7 +127,70 @@ const setDataRegistros = () => {
         </form>
         */}
       {/* SEARCH */}
+      <Table responsive striped>
+        <thead>
+          <tr>
+            <th>Cedula</th>
+            <th>Nombres</th>
+            <th>Apellidos</th>
+            <th>Telefono</th>
+            <th>Dirección</th>
+            <th>Fecha Salida</th>
+            <th>Tipo Salida</th>
+            <th>Observación</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        {/* <tbody>{ (matriculas.length > 0 && !isLoading ) && mapArray() }</tbody> */}
+        <tbody>
+          {
+          registros?.map( ( salida) => (
+          <tr key={salida.id}>
+            <td>{salida.cedula}</td>
+            <td>{salida.nombre}</td>
+            <td>{salida.apellido}</td>
+            <td>{salida.telefono}</td>
+            <td>{salida.direccion}</td>
+            <td>{salida.Fecha_salida}</td>
+            <td>{salida.tipoSalida}</td>
+            <td>{salida.observacion }</td>
+            <td>
+              <div className="col-2">
+                <button
+                  onClick={() =>
 
+                    modalEditSalida(salida)
+                  }
+                  data-backdrop="static"
+                  data-keyboard="false"
+                  className="btn btn-warning w-10"
+                  type="button"
+                  tabIndex="0"
+                  data-bs-toggle="tooltip"
+                  data-bs-placement="top"
+                  title="Matricular"
+                >
+                  <Icon icon="el:address-book-alt" width="20" />
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-danger"
+                  tabIndex="0"
+                  data-bs-toggle="tooltip"
+                  data-bs-placement="top"
+                  title="Eliminar"
+                  onClick={() => eliminarSalida(salida.id)}>
+                  <Icon icon="fluent:delete-12-regular" width="20" />
+                </button>
+              </div>
+            </td>
+          </tr>
+          )
+          )
+          
+      }
+        </tbody>
+      </Table>
     </div>
   )
 }

@@ -66,9 +66,9 @@ export const addRecluso = (data) => async (dispatch) => {
           Swal.fire({
             position: 'center',
             icon: 'success',
-            title: res.mesaje,
+            title: res.data.mesaje,
             showConfirmButton: false,
-            timer: 1500
+            timer: 2000
           })
 
         }).catch(function (error) {

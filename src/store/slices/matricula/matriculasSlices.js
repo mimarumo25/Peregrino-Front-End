@@ -39,7 +39,7 @@ export const addMatricula = (data) => async (dispatch) => {
       Swal.fire({
         position: 'center',
         icon: 'success',
-        title: res.mesaje,
+        title: res.data.mesaje,
         showConfirmButton: false,
         timer: 1500
       })
