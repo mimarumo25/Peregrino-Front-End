@@ -4,12 +4,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getLeccionAll } from '../../store/slices/leccion/leccionSlices';
 import { getMatriculasAll } from '../../store/slices/matricula/matriculasSlices';
 import { AsistenciaModal } from '../modal';
+import InformeEstudiantesModal from '../modal/InformeEstudiantesModal';
 
 export const Informes = () => {
 
   const dispatch = useDispatch();
   const [modalShow, setModalShow] = useState(false);
   const [titleModal, settitleModal] = useState("");
+
+  const [modalShow2, setModalShow2] = useState(false);
+  const [titleModal2, settitleModal2] = useState("");
+
   const [leccionEdit, setLeccionEdit] = useState({});
   const [matriculaEdit, setMatriculaEdit] = useState({});
   const [registros, setRegistros] = useState([]);
@@ -23,6 +28,13 @@ export const Informes = () => {
     setLeccionEdit(lecciones);
     setMatriculaEdit(matriculas);
     setModalShow(true);
+  };
+
+  const modalNewInformeEstudiante = () => {
+    settitleModal2("Nuevo Informe");
+    setLeccionEdit(lecciones);
+    setMatriculaEdit(matriculas);
+    setModalShow2(true);
   };
 
   const setDataRegistros = () => {
@@ -74,6 +86,15 @@ export const Informes = () => {
         backdrop="static"
         keyboard={false}
       />
+      <InformeEstudiantesModal
+        show={modalShow2}
+        title={titleModal2}
+        onHide={() => setModalShow2(false)}
+        leccion={leccionEdit}
+        matriculas={registros}
+        backdrop="static"
+        keyboard={false}
+      />
       <div className='container d-flex flex-column justify-content-center align-items-center gap-4 '>
         <h1>Informes</h1>
         <div className='col'>
@@ -96,10 +117,10 @@ export const Informes = () => {
             alignItems: 'center',
             gap: '.4rem'
           }}
-          onClick={ modalNewLeccion }
+          onClick={ modalNewInformeEstudiante }
         >
           <Icon icon="bi:pass" width="40" height="40" color='white' />
-          Generar Asistencia Por Leccion
+          Generar Informe de Estudiante Matriculado por Leccion
         </button>
         </div>
       </div>
