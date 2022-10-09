@@ -7,8 +7,8 @@ export const Home = () => {
     return (
         <>
         <div className="d-none d-md-block d-print-block">
-          <div className="row">
-            <div className="col-md-2" style={{
+          <div className="row d-flex flex-nowrap">
+            <div className='col-md-3 col-lg-2' style={{
               paddingRight: 0
             }}>
               <Sidebar />

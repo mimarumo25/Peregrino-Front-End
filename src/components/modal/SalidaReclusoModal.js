@@ -1,22 +1,36 @@
 import { Button, InputGroup, Modal, Table } from 'react-bootstrap';
 import { Formik, Form, Field } from "formik";
 import * as Yup from 'yup';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Icon } from '@iconify/react';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { url } from '../../helpers/auth-token';
+<<<<<<< HEAD
 
 export const SalidaReclusoModal = (props) => {
     const { id, cedula: ced, nombre, apellido, telefono, direccion, Fecha_salida, tipoSalida, observacion } = props.data;
+=======
+import { addSalidaRecluso } from '../../store/slices/salidaRecluso/salidaReclusoSlices';
+
+
+export const SalidaReclusoModal = (props) => {
+    const { idRecluso, id, cedula: ced, nombre, apellido, telefono, direccion, Fecha_salida, tipoSalida, observacion } = props.data;
+>>>>>>> master
     const { list: reclusos } = useSelector(store => store.reclusoList);
     const [tipoSalidas, setTipoSalidas] = useState({});
     const [resulData, setResulData] = useState([]);
     const [cedula, setCedula] = useState(ced);
+<<<<<<< HEAD
     const [nombreCompleto, setnombreCompleto] = useState(nombre + " " + apellido);
 
+=======
+    const [idR, setIdR] = useState(idRecluso);
+    const [nombreCompleto, setnombreCompleto] = useState(nombre + " " + apellido);
+    const dispatch = useDispatch();
+>>>>>>> master
     const validationReclusoSchema = Yup.object().shape({
-        cedula: Yup.number().required("Requerido*"),
+        cedula: Yup.string().required("Requerido*"),
         nombres: Yup.string().required("Requerido*"),
         telefono: Yup.string().required("Requerido*"),
         direccion: Yup.string().required("Requerido*"),
@@ -48,10 +62,11 @@ export const SalidaReclusoModal = (props) => {
         }
     }
     const addRecluso = (recluso) => {
-        const { cedula, nombres, apellidos } = recluso;
+        const { _id, cedula, nombres, apellidos } = recluso;
         const nuevoNombre = `${nombres} ${apellidos}`;
         setCedula(cedula)
         setnombreCompleto(nuevoNombre);
+        setIdR(_id)
     }
 
     return (
@@ -92,8 +107,14 @@ export const SalidaReclusoModal = (props) => {
                         </div>
                         <Formik
                             initialValues={{
+<<<<<<< HEAD
                                 cedula: cedula,
                                 nombres: nombreCompleto,
+=======
+                                recluso: idR || "",
+                                cedula: cedula || "",
+                                nombres: nombreCompleto || "",
+>>>>>>> master
                                 telefono: telefono || "",
                                 direccion: direccion || "",
                                 fecha: Fecha_salida || "",
@@ -103,14 +124,30 @@ export const SalidaReclusoModal = (props) => {
                             enableReinitialize
                             validationSchema={validationReclusoSchema}
                             onSubmit={(values, { resetForm }) => {
+<<<<<<< HEAD
                                 const { nombres, ...rest } = values
                                 if (id) {
 
                                 } else{
 
                                 }                         
+=======
+                                if (id) {
+
+                                } else {
+                                    dispatch(addSalidaRecluso(
+                                        values.recluso,
+                                        values.telefono,
+                                        values.direccion,
+                                        values.fecha,
+                                        values.salida,
+                                        values.observacion
+                                        ))
+                                }
+>>>>>>> master
                                 setCedula('')
                                 setnombreCompleto('')
+                                setIdR('')
                                 resetForm()
                             }}
                         >
@@ -119,6 +156,11 @@ export const SalidaReclusoModal = (props) => {
                                 <Form>
                                     <div className='row'>
                                         <div className='col-6'>
+                                            <Field
+                                                name="recluso"
+                                                id="id"
+                                                type="hidden"
+                                            />
                                             <b>
                                                 <label htmlFor="cedula" className="form-label">Cedula:</label>
                                             </b>

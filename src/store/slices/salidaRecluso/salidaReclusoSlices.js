@@ -30,15 +30,29 @@ export const getSalidaReclusoAll = (desde) => async (dispatch) => {
     }
 }
 
-export const addRecluso = (data) => async (dispatch) => {
-
-    axios.post(url + 'salidaReclusos/create', data, headers())
+export const addSalidaRecluso = (recluso, telefono, direccion, fechaSalida, salida, observacion) => async (dispatch) => {
+console.log({
+    recluso,
+    telefono,
+    direccion,
+    fechaSalida,
+    salida,
+    observacion
+});
+    axios.post(url + 'salidaReclusos/create', {
+        recluso,
+        telefono,
+        direccion,
+        fechaSalida,
+        salida,
+        observacion
+    }, headers())
         .then((res) => {
             dispatch(getSalidaReclusoAll())
             Swal.fire({
                 position: 'center',
                 icon: 'success',
-                title: res.mesaje,
+                title: res.data.mesaje,
                 showConfirmButton: false,
                 timer: 1500
             })
@@ -53,7 +67,7 @@ export const addRecluso = (data) => async (dispatch) => {
         });
 
 }
-export const updateRecluso = (data, id) => async (dispatch) => {
+export const updateSalidaRecluso = (data, id) => async (dispatch) => {
 
     axios.put(url + 'salidaReclusos/' + id, data, headers())
         .then((res) => {
@@ -77,7 +91,7 @@ export const updateRecluso = (data, id) => async (dispatch) => {
         });
 
 }
-export const deleteRecluso = (id) => async (dispatch) => {
+export const deleteSalidaRecluso = (id) => async (dispatch) => {
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
             confirmButton: 'btn btn-success',

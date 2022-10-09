@@ -120,8 +120,8 @@ export const Programas = () => {
                         programas.map((programa, i) =>
                             <tr key={i}>
                                 <td >{i + 1}</td>
-                                <td >{programa.nombre}</td>
-                                <td >{programa.descripcion}</td>
+                                <td >{programa?.nombre}</td>
+                                <td >{programa?.descripcion}</td>
                                 <td className="d-grid gap-2 d-md-flex justify-content-md-end">
                                     <button
                                         type="button"
