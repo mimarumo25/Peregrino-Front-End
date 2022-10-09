@@ -1,10 +1,6 @@
 import { Icon } from '@iconify/react';
 import React, { useEffect, useState } from 'react'
 import { Table } from 'react-bootstrap';
-<<<<<<< HEAD
-import DataTable from 'react-data-table-component';
-=======
->>>>>>> master
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { getReclusoAll } from '../../store/slices/recluso/reclusoSlices';
@@ -19,10 +15,7 @@ export const SalidaRecluso = () => {
   const [modalShow, setModalShow] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
   const [dataEdit, setDataEdit] = useState({});
-<<<<<<< HEAD
-=======
   const [isLoading, setIsLoading] = useState(true);
->>>>>>> master
   const modalNewSalida = () => {
     setModalTitle("Registrar Salida del Recluso")
     setModalShow(true);
@@ -38,52 +31,6 @@ export const SalidaRecluso = () => {
     e.preventDefault();
     dispatch(searchLecciones(value));
   };*/
-<<<<<<< HEAD
-  useEffect(() => {
-    dispatch(getReclusoAll());
-    dispatch(getSalidaReclusoAll());
-  }, [dispatch]);
-  useEffect(() => {
-    setDataRegistros()
-  }, [salidaReclusos]);
-
-
-  const setDataRegistros = () => {
-    if (registros.length === 0 && (registros.length < salidaReclusos.length)) {
-      salidaReclusos?.forEach((salidareclusos, index) => {
-        salidareclusos?.recluso.forEach((recluso) => {
-          salidareclusos?.salida.forEach((salida) => {
-            setRegistros((prev) => {
-              return (
-                [...prev, {
-                  id:salidareclusos?._id,
-                  idRecluso:recluso._id,
-                  cedula: recluso?.cedula,
-                  nombre: recluso?.nombres,
-                  apellido: recluso?.apellidos,
-                  telefono: salidareclusos?.telefono,
-                  direccion: salidareclusos?.direccion,
-                  Fecha_salida: salidareclusos?.fechaSalida,
-                  tipoSalida: salida?.name,
-                  observacion: salidareclusos?.observacion,
-
-                }]
-              )
-            })
-          })
-        })
-      });
-    }
-  }
-  const modalEditSalida = (registro) => {
-    setDataEdit(registro)
-    setModalTitle("Editar Salida Recluso")
-    setModalShow(true);
-  }
-  const eliminarSalida = () => {
-
-  }
-=======
   useEffect(() => {   
     setIsLoading(true);
     dispatch(getReclusoAll()); 
@@ -181,7 +128,6 @@ dispatch(deleteSalidaRecluso(id))
         </form>
         */}
       {/* SEARCH */}
->>>>>>> master
       <Table responsive striped>
         <thead>
           <tr>
