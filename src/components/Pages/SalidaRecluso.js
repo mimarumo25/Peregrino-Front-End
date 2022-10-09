@@ -159,7 +159,6 @@ dispatch(deleteSalidaRecluso(id))
               <div className="col-2">
                 <button
                   onClick={() =>
-
                     modalEditSalida(salida)
                   }
                   data-backdrop="static"

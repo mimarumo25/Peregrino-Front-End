@@ -1,9 +1,8 @@
 import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
+import { Navbar, Nav, NavLink } from 'react-bootstrap';
 
 import { Icon } from '@iconify/react';
-import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { deleteToken } from '../helpers/auth-token';
 import { setLogin } from '../store/slices/login';
@@ -20,39 +19,51 @@ export const NavBarM = (args) => {
         <Navbar collapseOnSelect expand="md" bg="secondary" variant="light">
             <Container>
                 <Navbar.Brand ><span className='text-white'>PeregrinoApp</span></Navbar.Brand>
-                <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                <Navbar.Toggle aria-controls="responsive-navbar-nav" data-bs-target="#responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="me-auto">
                     </Nav>
                     <Nav className='sidebarm'>
-                        <ul className='row'>
-                            <li>
-                                <NavLink to="/" className="text-white rounded py-2 w-100 d-inline-block p-2">
+                        <ul className='row text-center d-flex justify-content-center flex-column align-items-center'>
+                            <li className='d-flex gap-2 justify-content-between' style={{
+                                    width: '180px'
+                                }}>
+                                <NavLink eventKey={1} as={Link} to="/" className="text-white rounded py-2 w-100 d-inline-block p-2 d-flex gap-2 justify-content-start align-items-center">
                                     <Icon icon="clarity:dashboard-solid-badged" width="30" /> Dashboard
                                 </NavLink>
                             </li>
-                            <li>
-                                <NavLink to="usuarios" className="text-white rounded py-2 w-100 d-inline-block p-2" >
+                            <li className='d-flex gap-2 justify-content-between' style={{
+                                    width: '180px'
+                                }}>
+                                <NavLink eventKey={2} as={Link} to="usuarios" className="text-white rounded w-100 py-2 w-100 d-inline-block p-2 d-flex gap-2 justify-content-start align-items-center" >
                                     <Icon icon="bi:person-circle" width="30" /> Usuarios
                                 </NavLink>
                             </li>
-                            <li>
-                                <NavLink to="internos" className="text-white rounded py-2 w-100 d-inline-block p-2" >
+                            <li className='d-flex gap-2 justify-content-between' style={{
+                                    width: '180px'
+                                }}>
+                                <NavLink eventKey={3} as={Link} to="internos" className="text-white rounded w-100 py-2 w-100 d-inline-block p-2 d-flex gap-2 justify-content-start align-items-center" >
                                     <Icon icon="bi:file-person" width="30" /> Internos
                                 </NavLink>
                             </li>
-                            <li>
-                                <NavLink to="lecciones" className="text-white rounded py-2 w-100 d-inline-block p-2" >
+                            <li className='d-flex gap-2 justify-content-between' style={{
+                                    width: '180px'
+                                }}>
+                                <NavLink eventKey={4} as={Link} to="lecciones" className="text-white rounded w-100 py-2 w-100 d-inline-block p-2 d-flex gap-2 justify-content-start align-items-center" >
                                     <Icon icon="material-symbols:play-lesson" width="30" /> Lecciones
                                 </NavLink>
                             </li>
-                            <li>
-                                <NavLink to={"informes"} className="text-white rounded py-2 w-100 d-inline-block p-2">
+                            <li className='d-flex gap-2 justify-content-between' style={{
+                                    width: '180px'
+                                }}>
+                                <NavLink eventKey={5} as={Link} to={"informes"} className="text-white rounded w-100 py-2 p-2 d-flex gap-2 justify-content-start align-items-center">
                                     <Icon icon="carbon:report" width="30" /> Informes
                                 </NavLink>
                             </li>
-                            <li>
-                                <NavLink to={"Salir"} className="text-white rounded py-2 w-100 d-inline-block p-2 " onClick={logout}>
+                            <li className='d-flex gap-2 justify-content-between' style={{
+                                    width: '180px'
+                                }}>
+                                <NavLink eventKey={6} as={Link} to={"Salir"} className="text-white rounded w-100 py-2 p-2 d-flex gap-2 justify-content-start align-items-center" onClick={logout}>
                                     <Icon icon="ion:exit-outline" width="30" /> Salir
                                 </NavLink>
                             </li>
