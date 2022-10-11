@@ -2,14 +2,18 @@ import { Icon } from '@iconify/react';
 import { Field, Form, Formik } from 'formik'
 import React from 'react'
 import { Button, Modal } from 'react-bootstrap'
+import { useDispatch } from 'react-redux';
 import * as Yup from 'yup';
+import { updateUserPass } from '../../store/slices/user/userSlices';
 export const UpdatePassword = (props) => {
-    
+    const { _id } = props.data
+    const dispatch = useDispatch()
     const validationReclusoSchema = Yup.object().shape({
-        password: Yup.string().required("Requerido*"),
-        respitPassword: Yup.string().required("Requerido*").min(6,"Minimo 6 Caracteres"),
-        passwordActual: Yup.string().required("Requerido*").min(6,"Minimo 6 Caracteres"),
+        password: Yup.string().required("Requerido*").min(6, "Minimo 6 Caracteres"),
+        respitPassword: Yup.string().required("Requerido*").min(6, "Minimo 6 Caracteres").oneOf([Yup.ref('password'), null], 'La Nueva contraseña no coicide'),
+
     });
+
     return (
         <div>
             <Modal
@@ -28,34 +32,19 @@ export const UpdatePassword = (props) => {
                         initialValues={{
                             password: "",
                             respitPassword: "",
-                            passwordActual: ""
+
                         }}
                         validationSchema={validationReclusoSchema}
                         enableReinitialize
                         onSubmit={(values, { resetForm }) => {
-                            alert(JSON.stringify(values))
+                            const { respitPassword, ...rest } = values;
+                            dispatch(updateUserPass(rest,_id))
+                            resetForm()
                         }}
 
                     >
                         {({ errors, touched, values, handleChange }) => (
                             <Form>
-                                <div className="row py-2">
-                                    <div className="col">
-                                        <b>
-                                            <label htmlFor="passwordActual">Contraseña Actual:</label>
-                                        </b>
-                                        <Field
-                                            type="password"
-                                            name="passwordActual"
-                                            id="passwordActual"
-                                            className="form-control"
-                                            placeholder='Contraseña Actual'
-                                        />
-                                        {errors.passwordActual && touched.passwordActual ? (
-                                            <div className="text-danger">{errors.passwordActual}</div>
-                                        ) : null}
-                                    </div>
-                                </div>
                                 <div className="row">
                                     <div className="col">
                                         <b>
