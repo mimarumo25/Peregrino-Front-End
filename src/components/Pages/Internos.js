@@ -158,11 +158,11 @@ export const Internos = () => {
         backdrop="static"
         keyboard={false}
       />
-      <div className='py-2 d-flex align-items-center justify-content-between'>
+      <div className='py-2 d-flex align-items-center justify-content-between flex-column flex-md-row align-items-center gap-4'>
         <Button onClick={modalNewRecluso}><Icon icon="ant-design:plus-circle-outlined" width="20" /> Nuevo</Button>
         {/* <Search term='Reclusos' /> */}
         {/* SEARCH */}
-        <div className='d-flex justify-content-evenly'>
+        <div className='d-flex align-items-center justify-content-evenly gap-2 order-3'>
           <label style={{
             display: 'flex',
             alignItems: 'center',

@@ -174,7 +174,7 @@ export const Matricula = () => {
         keyboard={false}
         data={datosEdit}
       />
-      <div className="py-2 px-1 d-flex align-items-center justify-content-between">
+      <div className="py-2 px-1 d-flex align-items-center justify-content-between flex-column flex-md-row gap-4">
         <button
           onClick={modalNewMatricula}
           data-backdrop="static"
@@ -184,7 +184,7 @@ export const Matricula = () => {
         >
           <Icon icon="el:address-book-alt" width="20" /> Nueva Matricula
         </button>
-        <div className='d-flex justify-content-evenly'>
+        <div className='d-flex align-items-center justify-content-evenly gap-2 order-3'>
           <label style={{
             display: 'flex',
             alignItems: 'center',

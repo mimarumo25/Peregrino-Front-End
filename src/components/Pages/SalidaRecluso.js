@@ -85,11 +85,11 @@ dispatch(deleteSalidaRecluso(id))
         data={dataEdit}
       />
 
-      <div className="py-2 d-flex align-items-center justify-content-between">
+      <div className="py-2 d-flex align-items-center justify-content-between flex-column flex-md-row align-items-center gap-4">
         <Button onClick={modalNewSalida}>
           <Icon icon="ant-design:plus-circle-outlined" width="20" /> Nuevo
         </Button>
-        <div className='d-flex justify-content-evenly'>
+        <div className='d-flex align-items-center justify-content-evenly gap-2 order-3'>
           <label style={{
             display: 'flex',
             alignItems: 'center',
