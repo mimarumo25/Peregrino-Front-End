@@ -1,6 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from 'axios'
+import Swal from "sweetalert2";
 import { headers, url } from "../../../helpers/auth-token";
+import { getUser } from "../userLogged";
 
 export const userSlice = createSlice({
     name: "user",
@@ -50,3 +52,74 @@ export const searchUsers = ( term ) => async (dispatch) => {
         console.log(`Error: ${ error }`);
     }
   }
+  export const updateUserDatos = (data, id) => async (dispatch) => {
+
+    axios.put(url + 'users/datos/' + id, data, headers())
+        .then((res) => {
+            dispatch(getUsersAll())
+            Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: res.data.mensaje,
+                showConfirmButton: false,
+                timer: 1500
+            })
+            dispatch(getUser())
+
+        }).catch(function (error) {
+            const { mensaje } = error.response.data
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: mensaje,
+            })
+        });
+
+}
+export const updateUser = (data, id) => async (dispatch) => {
+
+    axios.put(url + 'users/' + id, data, headers())
+        .then((res) => {
+            dispatch(getUsersAll())
+            Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: res.data.mensaje,
+                showConfirmButton: false,
+                timer: 1500
+            })
+
+        }).catch(function (error) {
+            const { mensaje } = error.response.data
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: mensaje,
+            })
+        });
+
+}
+export const updateUserPass = (data, id) => async (dispatch) => {
+
+    axios.put(url + 'users/pass/' + id, data, headers())
+        .then((res) => {
+            dispatch(getUsersAll())
+            console.log(res.data.mensaje)
+            Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: res.data.mensaje,
+                showConfirmButton: false,
+                timer: 1500
+            })
+
+        }).catch(function (error) {
+            const { mensaje } = error.response.data
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: mensaje,
+            })
+        });
+
+}

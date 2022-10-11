@@ -42,16 +42,16 @@ export const loginEmailPassword = (email, password) => {
     };
   };
 
-  const getUser = async (dispatch) => {
+ export const getUser = async (dispatch) => {
     try {
       const { id } = decodeToken();
       await axios.get(`${url}users/${id}`)
         .then(res => {
           const user = res.data;
-          const { identifica, nombres, apellidos, telefono, email, roles, estado } = user;
+          const {_id, identifica, nombres, apellidos, telefono, email, roles, estado } = user;
           const [{ name }] = estado;
           const [role] = roles;
-          dispatch(setUserLogged({identifica, nombres, apellidos, telefono, email, roles:role.name, name}))
+          dispatch(setUserLogged({_id,identifica, nombres, apellidos, telefono, email, roles:role.name, name}))
           dispatch(setLogin(true))
          
         })

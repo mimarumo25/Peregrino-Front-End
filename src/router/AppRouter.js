@@ -22,10 +22,10 @@ const AppRouter = () => {
         const { id } = decodeToken();
         const { data: user } = await axios.get(`${url}users/${id}`);
         if (user?.email) {
-          const { identifica, nombres, apellidos, telefono, email, roles, estado } = user;
+          const {_id, identifica, nombres, apellidos, telefono, email, roles, estado } = user;
           const [{ name }] = estado;
           const [role] = roles;
-          dispatch(setUserLogged({identifica, nombres, apellidos, telefono, email, roles:role.name, estado:name}))
+          dispatch(setUserLogged({_id, identifica, nombres, apellidos, telefono, email, roles:role.name, estado:name}))
           dispatch(setLogin(true));
         }else{
           dispatch(setLogin(false));
