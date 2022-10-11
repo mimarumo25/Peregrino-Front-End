@@ -6,7 +6,7 @@ import { decodeToken, saveToken, url } from "../../../helpers/auth-token";
 import { setLogin } from "../login";
 
 export const userLoggedSlice = createSlice({
-    name: "userLogge",
+    name: "userLogged",
     initialState: {
         list:[],
     },
@@ -42,7 +42,8 @@ export const loginEmailPassword = (email, password) => {
     };
   };
 
- export const getUser = async (dispatch) => {
+ export const getUser = () => async (dispatch) => {
+  console.log('GET USER DISPATCH', { dispatch });
     try {
       const { id } = decodeToken();
       await axios.get(`${url}users/${id}`)

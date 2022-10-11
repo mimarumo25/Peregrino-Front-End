@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux';
 import * as Yup from 'yup';
 import { updateUserDatos } from '../../store/slices/user/userSlices';
 export const DatosUpdate = (props) => {
-    const { _id, nombres, apellidos, email, telefono } = props.data
+    const { _id, nombres, apellidos, email, telefono } = props.data;
     const dispatch =useDispatch()
     const validationReclusoSchema = Yup.object().shape({
         nombres: Yup.string().required("Requerido*"),
@@ -39,7 +39,8 @@ export const DatosUpdate = (props) => {
                         enableReinitialize
                         onSubmit={(values, { resetForm }) => {
                             dispatch(updateUserDatos(values, _id))
-                            resetForm()
+                            console.log('VALUES FORMIK', { values });
+                            resetForm();
                         }}
 
                     >

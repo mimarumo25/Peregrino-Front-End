@@ -16,6 +16,7 @@ export const Profile = () => {
         setTitle("Actualizar Contraseña")
         setModalShow1(true);
     };
+
     return (
         <div>
             <DatosUpdate
