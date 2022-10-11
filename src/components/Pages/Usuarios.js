@@ -17,6 +17,7 @@ export const Usuarios = () => {
   const [roles, setRoles] = useState({});
   const dispatch = useDispatch();
   const { list: users, total } = useSelector((store) => store.userList);
+  const { list: user } = useSelector((store) => store.userLogged);
 
   const [desde, setDesde] = useState(0);
   const [countPage, setCountPage] = useState(1);
@@ -95,7 +96,13 @@ export const Usuarios = () => {
       setCountPage( prev => prev += 1 );
     }
   };
-
+if(user.roles!=="admin"){
+  return(
+    <>
+    <h4 className="text-center mt-3"><b>SE REQUIERE ROL DE ADMINISTRADOR PARA ACCEDER A ESTA INFORMACIÓN</b></h4>
+    </>
+  )
+}else{
   return (
     <div>
       
@@ -224,6 +231,7 @@ export const Usuarios = () => {
       </div>
     </div>
   );
+}
 };
 
 export default Usuarios;

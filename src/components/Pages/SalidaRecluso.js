@@ -1,12 +1,14 @@
 import { Icon } from '@iconify/react';
 import React, { useEffect, useState } from 'react'
-import { Table } from 'react-bootstrap';
+import { Button, Table } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { getReclusoAll } from '../../store/slices/recluso/reclusoSlices';
 import { deleteSalidaRecluso, getSalidaReclusoAll } from '../../store/slices/salidaRecluso/salidaReclusoSlices';
 import SalidaReclusoModal from '../modal/SalidaReclusoModal';
-
+import RectHTMLTableExcel from 'react-html-table-to-excel'
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 export const SalidaRecluso = () => {
 
   const dispatch = useDispatch();
@@ -16,21 +18,19 @@ export const SalidaRecluso = () => {
   const [modalTitle, setModalTitle] = useState("");
   const [dataEdit, setDataEdit] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const [value, setValue] = useState('');
   const modalNewSalida = () => {
     setModalTitle("Registrar Salida del Recluso")
     setModalShow(true);
     setDataEdit({})
   };
-  /*const handleSearch = (e) => {
+  const handleSearch = (e) => {
     setValue(e.target.value);
     if (e.target.value <= 0) {
       dispatch();
     }
   };
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    dispatch(searchLecciones(value));
-  };*/
+
   useEffect(() => {   
     setIsLoading(true);
     dispatch(getReclusoAll()); 
@@ -43,15 +43,9 @@ useEffect(() => {
 
 const setDataRegistros = () => {
   if ( registros.length === 0 && (registros.length < salidaReclusos.length)&& !isLoading ) {
-    console.log("Entra al If");
     salidaReclusos?.forEach(( salidareclusos, index ) => {    
-      console.log("Tipo Salida :",salidareclusos); 
       salidareclusos?.recluso?.forEach(( recluso ) => {
-        console.log("Tipo Salida :",recluso);
           setRegistros(( prev ) => {
-            console.log('====================================');
-            console.log(prev);
-            console.log('====================================');
             return (
               [ ...prev,{
                 id:salidareclusos?._id,
@@ -90,33 +84,61 @@ dispatch(deleteSalidaRecluso(id))
         title={modalTitle}
         data={dataEdit}
       />
-      <div className="py-2">
-        <button
-          onClick={modalNewSalida}
-          data-backdrop="static"
-          data-keyboard="false"
-          className="btn btn-warning w-10"
-          type="button"
-        >
-          <Icon icon="el:address-book-alt" width="20" /> Nueva Salida
-        </button>
-      </div>
-      {
-      /* SEARCH *
-         <form
+
+      <div className="py-2 d-flex align-items-center justify-content-between">
+        <Button onClick={modalNewSalida}>
+          <Icon icon="ant-design:plus-circle-outlined" width="20" /> Nuevo
+        </Button>
+        <div className='d-flex justify-content-evenly'>
+          <label style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '.2rem'
+          }}
+            className="form-label"
+          >
+            Exportar En
+          </label>
+          <RectHTMLTableExcel type='button' className='btn btn-success mx-2' style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '.2rem'
+          }}
+            id="exportarExcel"
+            table="informe"
+            filename="SalidasReclusos"
+            sheet="Pagina 1"
+            buttonText={
+              <Icon
+                icon="file-icons:microsoft-excel"
+                color="white"
+                width="25"
+              />
+            }
+          />
+          <button type='button' className='btn btn-danger' style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '.2rem'
+          }} >
+            <Icon icon="ant-design:file-pdf-outlined" color="white" width="25" />
+          </button>
+        </div>
+        {/* SEARCH */}
+        <form
           style={{
             width: "320px",
             padding: "0 1rem",
           }}
           className="form"
-          onSubmit={handleSubmit}
+         
         >
           <div className="input-group">
             <input
               type="search"
               className="form-control"
               onChange={handleSearch}
-              placeholder={`Buscar Recluso por Cedula`}
+              placeholder={`Buscar Leccion por Nombre`}
               value={value}
               aria-label="Buscar..."
               aria-describedby="search-addon"
@@ -126,9 +148,12 @@ dispatch(deleteSalidaRecluso(id))
             </button>
           </div>
         </form>
-        */}
-      {/* SEARCH */}
-      <Table responsive striped>
+        {/* SEARCH */}
+      </div>
+      <Table responsive striped id='informe'
+      style={{
+        minWidth: '100%'
+      }}>
         <thead>
           <tr>
             <th>Cedula</th>
@@ -156,7 +181,7 @@ dispatch(deleteSalidaRecluso(id))
             <td>{salida.tipoSalida}</td>
             <td>{salida.observacion }</td>
             <td>
-              <div className="col-2">
+              <div className="d-grid gap-2 d-md-block">
                 <button
                   onClick={() =>
                     modalEditSalida(salida)

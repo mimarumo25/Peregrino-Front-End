@@ -2,22 +2,11 @@ import { Modal, Button, Table } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import { Formik, Form, Field } from "formik";
 import * as Yup from 'yup';
-import { useDispatch } from 'react-redux';
-import { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { addLeccion, updateLeccion } from '../../store/slices/leccion/leccionSlices';
-
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import RectHTMLTableExcel from 'react-html-table-to-excel'
 
 export const InformeEstudiantesModal = (props) => {
-    const dispatch = useDispatch();
-    
-    const { _id, nombre } = props.leccion;
-    const { list: programas } = useSelector(store => store.progamaList);
-    const [value, setValue] = useState('');
-    const [pdfData, setPdfData] = useState([]);
-
     const validationReclusoSchema = Yup.object().shape({
         nombre: Yup.string().required("Requerido*"),
     });
@@ -81,7 +70,7 @@ export const InformeEstudiantesModal = (props) => {
           290,
         );
     
-        doc.save('tabla.pdf');
+        doc.save('Reclusos por leccion.pdf');
       }
 
     const filtrarDatosRegistros = ( valuesLeccion = '' ) => {
@@ -102,7 +91,7 @@ export const InformeEstudiantesModal = (props) => {
             >
                 <Modal.Header closeButton>
                     <Modal.Title id="contained-modal-title-vcenter" >
-                        <b>{props.title}</b>
+                        <b>Nuevo Informe</b>
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
@@ -114,13 +103,6 @@ export const InformeEstudiantesModal = (props) => {
                         validationSchema={ validationReclusoSchema }
                         enableReinitialize
                         onSubmit={(values, { resetForm }) => {
-                            if (_id) {
-                                dispatch(updateLeccion(values, _id))
-                                resetForm()
-                            } else {
-                                dispatch(addLeccion(values))
-                                resetForm()
-                            }
                         }}
                         
                     >
@@ -186,7 +168,7 @@ export const InformeEstudiantesModal = (props) => {
                                             {
                                                 ( props.matriculas
                                                     .filter( matricula => matricula.leccion.toLocaleLowerCase().includes( values.leccion.toLocaleLowerCase() ) && matricula.estado === values.estado ).length > 0 && values.leccion )
-                                                ? <Table responsive striped>
+                                                ? <Table responsive striped id="informe">
                                                 <thead>
                                                     <th>No</th>
                                                     <th>Cedula</th>
@@ -229,16 +211,44 @@ export const InformeEstudiantesModal = (props) => {
                                     <Modal.Footer>
                                         {
                                             ( props.matriculas.filter( matricula => matricula.leccion.toLocaleLowerCase().includes( values.leccion.toLocaleLowerCase() ) && matricula.estado === values.estado ).length > 0 && values.leccion )
-                                            && <button type='button' className='btn btn-success' style={{
+                                            && <>
+                                            <label style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '.2rem'
+                                            }}
+                                            className="form-label"
+                                            >
+                                                Exportar En
+                                            </label>
+                                            <RectHTMLTableExcel type='button' className='btn btn-success' style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        gap: '.2rem'
+                                                    }}
+                                                        id="exportarExcel"
+                                                        table="informe"
+                                                        filename="Reclusos por leccion"
+                                                        sheet="Pagina 1"
+                                                        buttonText={
+                                                        <Icon
+                                                         icon="file-icons:microsoft-excel"
+                                                          color="white" 
+                                                          width="25"
+                                                        />   
+                                                                                                        
+                                                    }                                                    
+                                                    />
+                                            <button type='button' className='btn btn-danger' style={{
                                                 display: 'flex',
                                                 alignItems: 'center',
                                                 gap: '.2rem'
                                             }} onClick={ () => filtrarDatosRegistros( values.leccion ) }>
                                                 <Icon icon="ant-design:file-pdf-outlined" color="white" width="25" />
-                                                Generar Informe
                                             </button>
+                                            </>
                                         }
-                                        <Button onClick={props.onHide} className="btn btn-danger">
+                                        <Button onClick={props.onHide} className="btn btn-warning">
                                             Cancelar
                                         </Button>
                                     </Modal.Footer>

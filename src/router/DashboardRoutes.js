@@ -3,6 +3,7 @@ import { Dashboard, Informes, Internos, Lecciones, Usuarios, Programas, Matricul
 
 import { Routes, Route, Navigate } from "react-router-dom";
 import { SalidaRecluso } from "../components/Pages/SalidaRecluso";
+import { Profile } from "../components/Profile";
 
 export const DashboardRoutes = () => {
 
@@ -17,6 +18,7 @@ export const DashboardRoutes = () => {
           <Route path="/lecciones" element={<Lecciones />} />
           <Route path="/matriculas" element={<Matricula />} />
           <Route path="/salidas" element={<SalidaRecluso/>} />
+          <Route path="/profiles" element={<Profile/>} />
           <Route path="/informes" element={<Informes />} />
         </Route>
         <Route path="*" element={<Navigate to="/" />} />

@@ -56,14 +56,28 @@ export const NavBarM = (args) => {
                             <li className='d-flex gap-2 justify-content-between' style={{
                                     width: '180px'
                                 }}>
-                                <NavLink eventKey={5} as={Link} to={"informes"} className="text-white rounded w-100 py-2 p-2 d-flex gap-2 justify-content-start align-items-center">
+                                <NavLink eventKey={5} as={Link} to="matriculas" className="text-white rounded w-100 py-2 w-100 d-inline-block p-2 d-flex gap-2 justify-content-start align-items-center" >
+                                <Icon icon="material-symbols:play-lesson" width="20" /> Matricular
+                                </NavLink>
+                            </li>
+                            <li className='d-flex gap-2 justify-content-between' style={{
+                                    width: '180px'
+                                }}>
+                                <NavLink eventKey={6} as={Link} to="salidas" className="text-white rounded w-100 py-2 w-100 d-inline-block p-2 d-flex gap-2 justify-content-start align-items-center" >
+                                <Icon icon="fluent:picture-in-picture-exit-24-regular" width="20" /> Salidas Reclusos
+                                </NavLink>
+                            </li>
+                            <li className='d-flex gap-2 justify-content-between' style={{
+                                    width: '180px'
+                                }}>
+                                <NavLink eventKey={7} as={Link} to={"informes"} className="text-white rounded w-100 py-2 p-2 d-flex gap-2 justify-content-start align-items-center">
                                     <Icon icon="carbon:report" width="30" /> Informes
                                 </NavLink>
                             </li>
                             <li className='d-flex gap-2 justify-content-between' style={{
                                     width: '180px'
                                 }}>
-                                <NavLink eventKey={6} as={Link} to={"Salir"} className="text-white rounded w-100 py-2 p-2 d-flex gap-2 justify-content-start align-items-center" onClick={logout}>
+                                <NavLink eventKey={8} as={Link} to={"Salir"} className="text-white rounded w-100 py-2 p-2 d-flex gap-2 justify-content-start align-items-center" onClick={logout}>
                                     <Icon icon="ion:exit-outline" width="30" /> Salir
                                 </NavLink>
                             </li>

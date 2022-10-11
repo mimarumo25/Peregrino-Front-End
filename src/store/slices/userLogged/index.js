@@ -31,7 +31,7 @@ export const loginEmailPassword = (email, password) => {
         .then(function (response) {
           let dato = response.data;
           saveToken(dato.token);
-          Swal.fire("Bienvenido!", "Inicio de sesion exitoso!", "success");
+          Swal.fire("Bienvenido!", "Inicio de sesión exitoso!", "success");
           getUser(dispatch);
   
         })

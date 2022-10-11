@@ -5,6 +5,7 @@ import { getLeccionAll } from '../../store/slices/leccion/leccionSlices';
 import { getMatriculasAll } from '../../store/slices/matricula/matriculasSlices';
 import { AsistenciaModal } from '../modal';
 import InformeEstudiantesModal from '../modal/InformeEstudiantesModal';
+import InformeMatriculasEsModal from '../modal/InformeMatriculasEsModal';
 
 export const Informes = () => {
 
@@ -13,10 +14,10 @@ export const Informes = () => {
   const [titleModal, settitleModal] = useState("");
 
   const [modalShow2, setModalShow2] = useState(false);
-  const [titleModal2, settitleModal2] = useState("");
+  const [modalShow3, setModalShow3] = useState(false);
 
   const [leccionEdit, setLeccionEdit] = useState({});
-  const [matriculaEdit, setMatriculaEdit] = useState({});
+
   const [registros, setRegistros] = useState([]);
 
   const { list: lecciones } = useSelector((store) => store.leccionList);
@@ -26,25 +27,26 @@ export const Informes = () => {
   const modalNewLeccion = () => {
     settitleModal("Nueva Asistencia");
     setLeccionEdit(lecciones);
-    setMatriculaEdit(matriculas);
     setModalShow(true);
   };
 
   const modalNewInformeEstudiante = () => {
-    settitleModal2("Nuevo Informe");
     setLeccionEdit(lecciones);
-    setMatriculaEdit(matriculas);
     setModalShow2(true);
+  };
+  const modalNewInformeMatricula = () => {
+    setLeccionEdit(lecciones);
+    setModalShow3(true);
   };
 
   const setDataRegistros = () => {
-    if ( registros.length === 0 && (registros.length < matriculas.length) ) {
-      matriculas?.forEach(( matricula, index ) => {
-        matricula?.recluso.forEach(( recluso ) => {
-          matricula?.leccion.forEach(( leccion ) => {
-            setRegistros(( prev ) => {
+    if (registros.length === 0 && (registros.length < matriculas.length)) {
+      matriculas?.forEach((matricula, index) => {
+        matricula?.recluso.forEach((recluso) => {
+          matricula?.leccion.forEach((leccion) => {
+            setRegistros((prev) => {
               return (
-                [ ...prev,{
+                [...prev, {
                   cedula: recluso?.cedula,
                   nombre: recluso?.nombres,
                   apellido: recluso?.apellidos,
@@ -66,14 +68,14 @@ export const Informes = () => {
 
 
   useEffect(() => {
-    dispatch( getLeccionAll() );
-    dispatch( getMatriculasAll() );
-        
-  }, [ dispatch ]);
-  
+    dispatch(getLeccionAll());
+    dispatch(getMatriculasAll());
+
+  }, [dispatch]);
+
   useEffect(() => {
     setDataRegistros();
-  }, [ matriculas ]);
+  }, [matriculas]);
 
   return (
     <div className='row'>
@@ -88,8 +90,15 @@ export const Informes = () => {
       />
       <InformeEstudiantesModal
         show={modalShow2}
-        title={titleModal2}
         onHide={() => setModalShow2(false)}
+        leccion={leccionEdit}
+        matriculas={registros}
+        backdrop="static"
+        keyboard={false}
+      />
+      <InformeMatriculasEsModal
+        show={modalShow3}
+        onHide={() => setModalShow3(false)}
         leccion={leccionEdit}
         matriculas={registros}
         backdrop="static"
@@ -98,30 +107,43 @@ export const Informes = () => {
       <div className='container d-flex flex-column justify-content-center align-items-center gap-4 '>
         <h1>Informes</h1>
         <div className='col'>
-        <button className="btn btn-primary rounded-2 p-3 d-flex flex-wrap justify-content-center align-items-center gap-3"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '.4rem'
-          }}
-          onClick={ modalNewLeccion }
-        >
-          <Icon icon="bi:pass" width="40" height="40" color='white' />
-          Generar Asistencia Por Leccion
-        </button>
+          <button className="btn btn-success rounded-2 p-3 d-flex flex-wrap justify-content-center align-items-center gap-3"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '.4rem'
+            }}
+            onClick={modalNewLeccion}
+          >
+            <Icon icon="bi:pass" width="40" height="40" color='white' />
+            Generar Asistencia Por Leccion
+          </button>
         </div>
         <div className='col'>
-        <button className="btn btn-primary rounded-2 p-3 d-flex flex-wrap justify-content-center align-items-center gap-3"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '.4rem'
-          }}
-          onClick={ modalNewInformeEstudiante }
-        >
-          <Icon icon="bi:pass" width="40" height="40" color='white' />
-          Generar Informe de Estudiante Matriculado por Leccion
-        </button>
+          <button className="btn btn-primary rounded-2 p-3 d-flex flex-wrap justify-content-center align-items-center gap-3"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '.4rem'
+            }}
+            onClick={modalNewInformeEstudiante}
+          >
+            <Icon icon="bi:pass" width="40" height="40" color='white' />
+            Generar Informe de Estudiante Matriculado por Leccion
+          </button>
+        </div>
+        <div className='col'>
+          <button className="btn btn-info rounded-2 p-3 d-flex flex-wrap justify-content-center align-items-center gap-3"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '.4rem'
+            }}
+            onClick={modalNewInformeMatricula}
+          >
+            <Icon icon="ic:baseline-rotate-90-degrees-cw" width="40" />
+            Generar Informe de Lecciones Matriculadas por Estudiante
+          </button>
         </div>
       </div>
     </div>

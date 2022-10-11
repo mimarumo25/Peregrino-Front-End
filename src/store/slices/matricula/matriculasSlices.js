@@ -24,7 +24,6 @@ export const getMatriculasAll = () => async (dispatch) => {
   try {
     await axios.get(url + "matriculas")
       .then(res => {
-        console.log( 'RES ', res );
         dispatch(setMatriculasList(res.data))
       })
   } catch (error) {
@@ -54,10 +53,7 @@ export const addMatricula = (data) => async (dispatch) => {
     });
 
 }
-export const updateMatricula = (data, id) => async (dispatch) => {
-
-  console.log( data );
-  
+export const updateMatricula = (data, id) => async (dispatch) => {  
   axios.put(url + 'matriculas/' + id, data, headers())
     .then((res) => {
       dispatch(getMatriculasAll())

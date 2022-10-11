@@ -2,21 +2,12 @@ import { Modal, Button, Table } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import { Formik, Form, Field } from "formik";
 import * as Yup from 'yup';
-import { useDispatch } from 'react-redux';
-import { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { addLeccion, updateLeccion } from '../../store/slices/leccion/leccionSlices';
-
+import RectHTMLTableExcel from 'react-html-table-to-excel'
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
 export const AsistenciaModal = (props) => {
-    const dispatch = useDispatch();
-    
-    const { _id, nombre } = props.leccion;
-    const { list: programas } = useSelector(store => store.progamaList);
-    const [value, setValue] = useState('');
-    const [pdfData, setPdfData] = useState([]);
+
 
     const validationReclusoSchema = Yup.object().shape({
         nombre: Yup.string().required("Requerido*"),
@@ -33,8 +24,8 @@ export const AsistenciaModal = (props) => {
         doc.setFontSize(16);
         doc.setTextColor(0, 0, 0);
         doc.text(
-          `Listado General De Registros`,
-          60,
+          `Asistencia para la Leccion: ${matriculasFiltradas[0].leccion}`,
+          15,
           35,
         );
     
@@ -81,7 +72,7 @@ export const AsistenciaModal = (props) => {
           290,
         );
     
-        doc.save('tabla.pdf');
+        doc.save('Asistencia.pdf');
       }
 
     const filtrarDatosRegistros = ( valuesLeccion = '' ) => {
@@ -113,13 +104,7 @@ export const AsistenciaModal = (props) => {
                         validationSchema={ validationReclusoSchema }
                         enableReinitialize
                         onSubmit={(values, { resetForm }) => {
-                            if (_id) {
-                                dispatch(updateLeccion(values, _id))
-                                resetForm()
-                            } else {
-                                dispatch(addLeccion(values))
-                                resetForm()
-                            }
+ 
                         }}
                         
                     >
@@ -156,7 +141,7 @@ export const AsistenciaModal = (props) => {
                                             <>
                                             {
                                                 ( props.matriculas.filter( matricula => matricula.leccion.toLocaleLowerCase().includes( values.leccion.toLocaleLowerCase() ) && matricula.estado === 'En Curso' ).length > 0 && values.leccion )
-                                                ? <Table responsive striped>
+                                                ? <Table responsive striped id="informe">
                                                 <thead>
                                                     <th>No</th>
                                                     <th>Cedula</th>
@@ -201,16 +186,45 @@ export const AsistenciaModal = (props) => {
                                     <Modal.Footer>
                                         {
                                             ( props.matriculas.filter( matricula => matricula.leccion.toLocaleLowerCase().includes( values.leccion.toLocaleLowerCase() ) && matricula.estado === 'En Curso' ).length > 0 && values.leccion )
-                                            && <button type='button' className='btn btn-success' style={{
+                                            && 
+                                            <>
+                                            <label style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '.2rem'
+                                            }}
+                                            className="form-label"
+                                            >
+                                                Generar Asistencia En
+                                            </label>
+                                            <RectHTMLTableExcel type='button' className='btn btn-success' style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        gap: '.2rem'
+                                                    }}
+                                                        id="exportarExcel"
+                                                        table="informe"
+                                                        filename="Asistencia"
+                                                        sheet="Pagina 1"
+                                                        buttonText={
+                                                        <Icon
+                                                         icon="file-icons:microsoft-excel"
+                                                          color="white" 
+                                                          width="25"
+                                                        />   
+                                                                                                        
+                                                    }                                                    
+                                                    />
+                                            <button type='button' className='btn btn-danger' style={{
                                                 display: 'flex',
                                                 alignItems: 'center',
                                                 gap: '.2rem'
                                             }} onClick={ () => filtrarDatosRegistros( values.leccion ) }>
                                                 <Icon icon="ant-design:file-pdf-outlined" color="white" width="25" />
-                                                Generar Asistencia
                                             </button>
+                                            </>
                                         }
-                                        <Button onClick={props.onHide} className="btn btn-danger">
+                                        <Button onClick={props.onHide} className="btn btn-warning">
                                             Cancelar
                                         </Button>
                                     </Modal.Footer>

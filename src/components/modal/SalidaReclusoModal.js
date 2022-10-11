@@ -51,16 +51,6 @@ export const SalidaReclusoModal = (props) => {
       }
     };
     cargaTipoSalida();
-    console.log({
-      idR,
-      cedula,
-      nombreCompleto,
-      telefono,
-      direccion,
-      Fecha_salida,
-      tipoSalida,
-      observacion,
-    });
     setCedula(ced);
     setnombreCompleto(`${nombre} ${apellido}`);
     setIdR(idRecluso);

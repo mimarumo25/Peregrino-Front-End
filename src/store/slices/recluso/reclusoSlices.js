@@ -28,7 +28,6 @@ export const { setReclusoList, setReclusoTotal } = reclusoSlice.actions;
 export default reclusoSlice.reducer;
 
 export const getReclusoAll = ( desde ) => async (dispatch) => {
-    console.log('DESDE DEL DISPATCH', { desde });
     try {
         await axios.get(url + `Recluso?desde=${ desde }`)
             .then(res => {

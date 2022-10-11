@@ -7,10 +7,10 @@ import { deleteMatricula, getMatriculasAll } from "../../store/slices/matricula/
 import { getLeccionAll } from "../../store/slices/leccion/leccionSlices";
 import { getReclusoAll } from "../../store/slices/recluso/reclusoSlices";
 import { MatriculaModal, MatriculaModalEdit } from "../modal";
-
-import { LoaderSpinner } from "../";
-import jsPDF from "jspdf";
+import RectHTMLTableExcel from 'react-html-table-to-excel'
+import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { LoaderSpinner } from "../";
 
 export const Matricula = () => {
   const dispatch = useDispatch();
@@ -156,7 +156,7 @@ export const Matricula = () => {
       290,
     );
 
-    doc.save('tabla.pdf');
+    doc.save('Matriculas.pdf');
   }
 
   return (
@@ -184,7 +184,41 @@ export const Matricula = () => {
         >
           <Icon icon="el:address-book-alt" width="20" /> Nueva Matricula
         </button>
-
+        <div className='d-flex justify-content-evenly'>
+          <label style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '.2rem'
+          }}
+            className="form-label"
+          >
+            Exportar En
+          </label>
+          <RectHTMLTableExcel type='button' className='btn btn-success mx-2' style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '.2rem'
+          }}
+            id="exportarExcel"
+            table="informe"
+            filename="Matriculas"
+            sheet="Pagina 1"
+            buttonText={
+              <Icon
+                icon="file-icons:microsoft-excel"
+                color="white"
+                width="25"
+              />
+            }
+          />
+          <button type='button' className='btn btn-danger' style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '.2rem'
+          }} onClick={createPdf}>
+            <Icon icon="ant-design:file-pdf-outlined" color="white" width="25" />
+          </button>
+        </div>
         <div style={{
           width: '300px'
         }}>
@@ -207,7 +241,9 @@ export const Matricula = () => {
       </div>
       <Table responsive striped style={{
         minWidth: '100%'
-      }}>
+      }}
+      id="informe"
+      >
         <thead>
           <tr>
             <th>Cedula</th>
@@ -284,13 +320,6 @@ export const Matricula = () => {
 
       {
         (isLoading && matriculas.length === 0) && <LoaderSpinner />
-      }
-
-      {
-        (!isLoading && matriculas.length !== 0 && pdfData.filter(data => data.cedula.includes(value).length > 0))
-        && <button
-          className="btn btn-primary"
-          onClick={createPdf}>Descargar Pdf</button>
       }
     </div>
   );

@@ -16,8 +16,6 @@ export const MatriculaModal = (props) => {
     const [resulData, setResulData] = useState([]);
     const [cedula, setCedula] = useState("");
     const [nombreCompleto, setnombreCompleto] = useState("");
-
-    console.log(cedula);
     const validationReclusoSchema = Yup.object().shape({
         cedula: Yup.number().required("Requerido*"),
         nombres: Yup.string().required("Requerido*"),
@@ -34,14 +32,10 @@ export const MatriculaModal = (props) => {
         }
     }
     const addRecluso = (recluso) => {
-        console.log({ recluso });
         const { cedula, nombres, apellidos } = recluso;
         const nuevoNombre = `${ nombres } ${ apellidos }`;
-        console.log({ cedula });
         setCedula(cedula)
         setnombreCompleto( nuevoNombre );
-        
-        console.log( {nombreCompleto} );
     }
     
     return (
