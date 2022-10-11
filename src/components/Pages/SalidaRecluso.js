@@ -181,7 +181,7 @@ dispatch(deleteSalidaRecluso(id))
             <td>{salida.tipoSalida}</td>
             <td>{salida.observacion }</td>
             <td>
-              <div className="d-grid gap-2 d-md-block">
+              <div className="col-2 d-flex gap-2">
                 <button
                   onClick={() =>
                     modalEditSalida(salida)
