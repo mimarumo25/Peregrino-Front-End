@@ -1,6 +1,6 @@
 import jwt_decode from "jwt-decode";
 // export const url = process.env.REACT_APP_NAME;
-export const url = process.env.REACT_APP_NAME_LOCAL;
+export const url = process.env.REACT_APP_NAME;
 
 export const saveToken = (token) => {
   document.cookie = `TOKEN=${token}; max-Age=${86400}; path=/; samesite=strict`;

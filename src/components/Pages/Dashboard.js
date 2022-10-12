@@ -49,7 +49,7 @@ useEffect(() => {
                             <div className="card-block">
                                 <h6 className="m-b-20 text-center">TOTAL SALIDAS</h6>
                                 <h2 className="d-flex justify-content-around">
-                                    <Icon icon="fluent:picture-in-picture-exit-24-regular" width="50" />
+                                    <Icon icon="fluent:picture-in-picture-exit-24-regular" width="48" />
                                     <span>{data.salida}</span>
                                 </h2>
                             </div>

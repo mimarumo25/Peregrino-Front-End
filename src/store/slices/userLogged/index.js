@@ -32,7 +32,8 @@ export const loginEmailPassword = (email, password) => {
           let dato = response.data;
           saveToken(dato.token);
           Swal.fire("Bienvenido!", "Inicio de sesión exitoso!", "success");
-          getUser(dispatch);
+          console.log("login");
+          dispatch(getUser());
   
         })
         .catch(function (error) {
@@ -43,7 +44,7 @@ export const loginEmailPassword = (email, password) => {
   };
 
  export const getUser = () => async (dispatch) => {
-  console.log('GET USER DISPATCH', { dispatch });
+  console.log("login");
     try {
       const { id } = decodeToken();
       await axios.get(`${url}users/${id}`)

@@ -68,11 +68,11 @@ export const Matricula = () => {
     dispatch(getMatriculasAll());
     dispatch(getReclusoAll());
     setIsLoading(false);
-  }, [dispatch]);
+  }, [dispatch,matriculas]);
 
   useEffect(() => {
     setAllMatriculasInState();
-  }, [matriculas]);
+  }, [matriculas,dispatch]);
 
   const modalNewMatricula = () => {
     setModalShow(true);
