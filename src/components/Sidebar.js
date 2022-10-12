@@ -34,12 +34,12 @@ export const Sidebar = () => {
                 </li>
                 <li>
                     <NavLink to="matriculas" className="text-white rounded py-2 w-100 d-inline-block p-2" >
-                        <Icon icon="material-symbols:play-lesson" width="20" /> Matricular
+                        <Icon icon="fa6-solid:user-graduate" /> Matricular
                     </NavLink>
                 </li>
                 <li>
                     <NavLink to={"salidas"} className="text-white rounded py-2 w-100 d-inline-block p-2 ">
-                    <Icon icon="fluent:picture-in-picture-exit-24-regular" width="20" /> Salidas Reclusos
+                        <Icon icon="fluent:picture-in-picture-exit-24-regular" width="20" /> Salidas Reclusos
                     </NavLink>
                 </li>
                 <li>

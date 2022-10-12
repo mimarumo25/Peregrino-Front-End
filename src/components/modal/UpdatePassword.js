@@ -43,7 +43,7 @@ export const UpdatePassword = (props) => {
                         }}
 
                     >
-                        {({ errors, touched, values, handleChange }) => (
+                        {({ errors, touched }) => (
                             <Form>
                                 <div className="row">
                                     <div className="col">

@@ -39,12 +39,10 @@ export const DatosUpdate = (props) => {
                         enableReinitialize
                         onSubmit={(values, { resetForm }) => {
                             dispatch(updateUserDatos(values, _id))
-                            console.log('VALUES FORMIK', { values });
                             resetForm();
                         }}
-
                     >
-                        {({ errors, touched, values, handleChange }) => (
+                        {({ errors, touched }) => (
                             <Form>
                                 <div className="row">
                                     <div className="col">

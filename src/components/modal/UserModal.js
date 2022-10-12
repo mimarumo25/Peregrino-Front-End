@@ -1,12 +1,14 @@
 import { Icon } from '@iconify/react';
 import { Formik, Form, Field } from "formik";
 import { Modal, Card, Button } from 'react-bootstrap';
+import { useDispatch } from 'react-redux';
 import * as Yup from 'yup';
+import { addUser, updateUser } from '../../store/slices/user/userSlices';
 
 
 export const UserModal = (props) => {
-
-    const { _id, identifica, nombres, apellidos, telefono, email, roles:rol } = props.userEdit
+    const dispatch = useDispatch()
+    const { _id, identifica, nombres, apellidos, telefono, email, roles: rol } = props.userEdit
 
     const validationUserSchema = Yup.object().shape({
         identifica: Yup.string().required("Requerido*").max(10, 'Maximo 10 digitos'),
@@ -14,13 +16,9 @@ export const UserModal = (props) => {
         apellidos: Yup.string().required("Requerido*"),
         email: Yup.string().email().required("Requerido*"),
         telefono: Yup.number().required("Requerido*"),
-        createUpdate: Yup.boolean(),
-        password: Yup.string().when("createUpdate", {
-            is: true,
-            then: Yup.string().required("Requerido*"),
-        }),
-
-        roles: Yup.string().required("Requerido").nullable()
+        roles: Yup.string().required("Requerido"),
+        password: Yup.string().min(6, "Minimo 6 Caracteres"),
+        repitPassword: Yup.string().min(6, "Minimo 6 Caracteres").oneOf([Yup.ref('password'), null], 'Las contraseñas no Coinciden')
     })
 
     return (
@@ -45,13 +43,36 @@ export const UserModal = (props) => {
                         email: email || "",
                         password: "",
                         repitPassword: "",
-                        roles: rol || [],
-                        createUpdate: props.create || ''
+                        roles: "",
                     }}
                     validationSchema={validationUserSchema}
                     onSubmit={(values, { resetForm }) => {
-                        alert("Hecho!")
-                        //resetForm()
+                        if (_id) {
+                            const roles = [values.roles]
+                            const dataUpdatre = {
+                                identifica: values.identifica,
+                                nombres: values.nombres,
+                                apellidos: values.apellidos,
+                                telefono: values.telefono,
+                                email: values.email,
+                                roles
+                            }
+                            dispatch(updateUser(dataUpdatre, _id))
+                        } else {
+                            const roles = [values.roles]
+                            const data = {
+                                identifica: values.identifica,
+                                nombres: values.nombres,
+                                apellidos: values.apellidos,
+                                telefono: values.telefono,
+                                email: values.email,
+                                password: values.password,
+                                roles
+                            }
+                            dispatch(addUser(data))
+                        }
+
+                        resetForm()
                     }}
                 >
                     {({ errors, touched }) => (
@@ -158,9 +179,10 @@ export const UserModal = (props) => {
                                                     <label htmlFor="roles">Roles:</label>
                                                 </b>
                                                 <Field
-                                                    component="select"
+                                                    as="select"
                                                     name="roles"
                                                     id="roles"
+                                                    multiple={false}
                                                     className="form-control"
                                                 >
                                                     <option defaultValue={true}>Seleccione un Rol</option>
@@ -193,7 +215,7 @@ export const UserModal = (props) => {
                                                     placeholder="Confirmar Contraseña"
                                                 />
                                                 {errors.repitPassword && touched.repitPassword ? (
-                                                    <div className="error">{errors.repitPassword}</div>
+                                                    <div className="text-danger">{errors.repitPassword}</div>
                                                 ) : null}
                                             </div>
                                             <div className="col col-sm-6">
@@ -201,10 +223,11 @@ export const UserModal = (props) => {
                                                     <label htmlFor="roles">Roles:</label>
                                                 </b>
                                                 <Field
-                                                    component="select"
+                                                    as="select"
                                                     name="roles"
                                                     id="roles"
                                                     className="form-control"
+                                                    multiple={false}
                                                 >
                                                     <option defaultValue={true}>Seleccione un Rol</option>
                                                     {

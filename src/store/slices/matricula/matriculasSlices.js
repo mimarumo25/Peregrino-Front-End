@@ -57,7 +57,6 @@ export const updateMatricula = (data, id) => async (dispatch) => {
   axios.put(url + 'matriculas/' + id, data, headers())
     .then((res) => {
       dispatch(getMatriculasAll())
-      console.log(res.data.mensaje)
       Swal.fire({
         position: 'center',
         icon: 'success',

@@ -5,12 +5,11 @@ import { UserModal } from "../modal";
 import { url } from "../../helpers/auth-token";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { getUsersAll, searchUsers } from "../../store/slices/user/userSlices";
+import { deleteUser, getUsersAll, searchUsers } from "../../store/slices/user/userSlices";
 
 import axios from "axios";
 
 export const Usuarios = () => {
-  const [create, setCreate] = useState();
   const [modalShow, setModalShow] = useState(false);
   const [titleModal, settitleModal] = useState("");
   const [userEdit, setUserEdit] = useState({});
@@ -64,16 +63,16 @@ export const Usuarios = () => {
     setModalShow(true);
     settitleModal("Nuevo Usuario");
     setUserEdit({});
-    setCreate(true);
+   
   };
   const modalEditUser = (user) => {
     setModalShow(true);
     settitleModal("Editar Usuario");
     setUserEdit(user);
-    setCreate(false);
+
   };
-  function eliminarUser(user) {
-    alert(JSON.stringify(user));
+  function eliminarUser(id) {
+   dispatch(deleteUser(id))
   }
 
   const cambiarPagina = (valor) => {
@@ -108,11 +107,10 @@ if(user.roles!=="admin"){
       
       <UserModal
         show={modalShow}
-        title={titleModal}
         onHide={() => setModalShow(false)}
         roles={roles}
+        title={titleModal}
         userEdit={userEdit}
-        create={create}
         backdrop="static"
         keyboard={false}
       />
@@ -192,7 +190,7 @@ if(user.roles!=="admin"){
                       data-bs-toggle="tooltip"
                       data-bs-placement="top"
                       title="Eliminar"
-                      onClick={() => eliminarUser(user)}
+                      onClick={() => eliminarUser(user._id)}
                     >
                       <Icon icon="fluent:delete-12-regular" width="20" />
                     </button>

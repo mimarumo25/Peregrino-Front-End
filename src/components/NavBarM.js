@@ -6,13 +6,32 @@ import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { deleteToken } from '../helpers/auth-token';
 import { setLogin } from '../store/slices/login';
+import Swal from 'sweetalert2';
 
 
 export const NavBarM = (args) => {
     const dispatch = useDispatch()
     const logout = () => {
-        deleteToken()
-        dispatch(setLogin(false))
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: "Que deseas Cerrar Sesión!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, Cerrar Sesión!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire(
+                    'Sesión Cerrada!',
+                    'Gracias por usar nuestro sistema.',
+                    'success'
+
+                )
+                deleteToken()
+                dispatch(setLogin(false))
+            }
+        })
     }
 
     return (
@@ -57,7 +76,7 @@ export const NavBarM = (args) => {
                                     width: '180px'
                                 }}>
                                 <NavLink eventKey={5} as={Link} to="matriculas" className="text-white rounded w-100 py-2 w-100 d-inline-block p-2 d-flex gap-2 justify-content-start align-items-center" >
-                                <Icon icon="material-symbols:play-lesson" width="20" /> Matricular
+                                <Icon icon="fa6-solid:user-graduate" width="20"/> Matricular
                                 </NavLink>
                             </li>
                             <li className='d-flex gap-2 justify-content-between' style={{

@@ -33,10 +33,30 @@ export const getUsersAll = ( desde ) => async (dispatch) => {
     } catch (error) {
         console.log(error);
     }
-    //const [role] = roles;
-    //dispatch(setUserList({_id, identifica, nombres, apellidos, telefono, email, roles:role.name}))
 }
+export const addUser = (data) => async (dispatch) => {
+  
+    axios.post(url+'users/create', data, headers())
+    .then((res) => {
+       dispatch(getUsersAll())
+      Swal.fire({
+        position: 'center',
+        icon: 'success',
+        title: res.data.mesage,
+        showConfirmButton: false,
+        timer: 2000
+      })
 
+    }).catch(function (error) {
+      const {message}=error.response.data
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: message,
+          })
+      });
+
+}
 export const searchUsers = ( term ) => async (dispatch) => {
     try {
         if ( term.length > 0 ) {
@@ -123,3 +143,52 @@ export const updateUserPass = (data, id) => async (dispatch) => {
         });
 
 }
+export const deleteUser = (id) => async (dispatch) => {
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: 'btn btn-success',
+        cancelButton: 'btn btn-danger'
+      },
+      buttonsStyling: false
+    })
+  
+    swalWithBootstrapButtons.fire({
+      title: '¿Está seguro?',
+      text: "¡No podrás revertir esto!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: '¡Si, Eliminar!',
+      cancelButtonText: '¡No, Cancelar!',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios.delete(url + 'users/' + id, headers())
+          .then((res) => {
+            dispatch(getUsersAll())
+            swalWithBootstrapButtons.fire(
+              '¡Eliminado!',
+              'Su archivo ha sido eliminado.',
+              'success'
+            )
+  
+          }).catch(function (error) {
+            const { mensaje } = error.response.data
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: mensaje,
+            })
+          });
+  
+      } else if (
+        /* Read more about handling dismissals below */
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        swalWithBootstrapButtons.fire(
+          'Cancelado',
+          'Tu archivo imaginario está a salvo :)',
+          'error'
+        )
+      }
+    })
+  }
