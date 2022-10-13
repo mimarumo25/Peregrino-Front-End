@@ -39,7 +39,7 @@ export const SalidaRecluso = () => {
   }, [dispatch]);
 useEffect(() => {
   setDataRegistros()
-}, [salidaReclusos]);
+}, [salidaReclusos,dispatch]);
 
 const setDataRegistros = () => {
   if ( registros.length === 0 && (registros.length < salidaReclusos.length)&& !isLoading ) {
@@ -131,7 +131,6 @@ dispatch(deleteSalidaRecluso(id))
             padding: "0 1rem",
           }}
           className="form"
-         
         >
           <div className="input-group">
             <input
@@ -193,7 +192,7 @@ dispatch(deleteSalidaRecluso(id))
                   tabIndex="0"
                   data-bs-toggle="tooltip"
                   data-bs-placement="top"
-                  title="Matricular"
+                  title="Editar"
                 >
                   <Icon icon="el:address-book-alt" width="20" />
                 </button>
