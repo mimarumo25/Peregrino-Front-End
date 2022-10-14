@@ -40,10 +40,8 @@ export const ProgramaModal = (props) => {
                         onSubmit={(values, { resetForm }) => {
                             if (_id) {
                                 dispatch(updatePrograma(values, _id))
-                                resetForm()
                             } else {
                                 dispatch(addPrograma(values))
-                                resetForm()
                             }
                         }}
                     >

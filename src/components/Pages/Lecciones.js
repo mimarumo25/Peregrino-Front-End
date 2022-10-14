@@ -236,14 +236,14 @@ export const Lecciones = () => {
         </thead>
         <tbody>
           {Array.isArray(lecciones)
-            ? lecciones.map((leccion, i) => (
-              <tr key={i}>
+            ? lecciones.map((leccion) => (
+              <tr key={leccion.nivel}>
                 <td>{leccion?.nivel}</td>
                 <td>{leccion?.nombre}</td>
                 <td>
                   {Array.isArray(leccion?.programa)
                     ? leccion?.programa.map((programa) => (
-                      <span key={programa?._id}>{programa?.nombre}</span>
+                      <span key={programa?.nombre}>{programa?.nombre}</span>
                     ))
                     : null}
                 </td>

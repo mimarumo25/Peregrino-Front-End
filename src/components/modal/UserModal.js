@@ -72,7 +72,6 @@ export const UserModal = (props) => {
                             dispatch(addUser(data))
                         }
 
-                        resetForm()
                     }}
                 >
                     {({ errors, touched }) => (

@@ -85,9 +85,6 @@ export const MatriculaModal = (props) => {
                                 const { nombres, ...rest } = values;
 
                                 dispatch( addMatricula( rest ) );
-                                setCedula('')
-                                setnombreCompleto('')
-                                resetForm()
                             }}
                         >
                             {({ values, errors, touched, handleChange, handleBlur }) => (

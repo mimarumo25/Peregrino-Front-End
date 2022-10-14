@@ -9,15 +9,16 @@ import { useSelector } from 'react-redux';
 import { addLeccion, updateLeccion } from '../../store/slices/leccion/leccionSlices';
 
 export const LeccionModal = (props) => {
-    const [nombrePrograma, setNombrePrograma] = useState(props.programa);
+    const [nombrePrograma, setNombrePrograma] = useState('');
     const [programaEditar, setProgramaEditar] = useState([]);
-    const { _id, nombre, nivel, programa, descripcion } = props.leccion;
+    const { _id, nombre = '', nivel, programa, descripcion } = props.leccion;
     const dispatch = useDispatch();
     const { list: programas } = useSelector(store => store.progamaList);
 
     useEffect(() => {
+        // setNombrePrograma(props.programa);
         if (_id) {
-            const [{ nombre = 'NA' }] = programa;
+            const [{ nombre = 'LPP' }] = programa;
             setNombrePrograma(nombre);
             const programaEdit = programas.filter(p => p?.nombre !== nombre )
             setProgramaEditar(programaEdit)
@@ -53,18 +54,17 @@ export const LeccionModal = (props) => {
                         initialValues={{
                             nombre: nombre || "",
                             nivel: nivel || "",
-                            programa:nombrePrograma | "",
+                            programa: nombrePrograma || "",
                             descripcion: descripcion || "",
                         }}
                         validationSchema={ validationReclusoSchema }
                         enableReinitialize
                         onSubmit={(values, { resetForm }) => {
+                            console.log({ values });
                             if (_id) {
                                 dispatch(updateLeccion(values, _id))
-                                resetForm()
                             } else {
                                 dispatch(addLeccion(values))
-                                resetForm()
                             }
                         }}
                     >
@@ -97,14 +97,21 @@ export const LeccionModal = (props) => {
                                             id="programa"
                                             className="form-control"
                                         >
-                                            <option value={nombrePrograma}>{nombrePrograma}</option>
-                                            {Array.isArray(programaEditar) ? programaEditar.map((prog, i) =>
-                                                <option key={i} value={prog.nombre}>{prog.nombre}</option>
+                                            {Array.isArray(programaEditar) && nombrePrograma ? programaEditar.map((prog, i) =>
+                                            {
+                                                console.log({ nombrePrograma });
+                                                return (
+                                                    <>  
+                                            <option value={ !nombrePrograma ? 'LPP' : nombrePrograma }>{nombrePrograma}</option>
+                                            <option key={prog?.nombre} value={prog?.nombre}>{prog?.nombre}</option>
+                                            </>
+                                                )
+                                            }
                                             ) : null
                                             }
                                         </Field>
                                         {errors.programa && touched.programa ? (
-                                            <div className="text-danger">{errors.programa}</div>
+                                            <div className="text-danger">{errors?.programa}</div>
                                         ) : null}
                                     </div>)
                                     : (<div className="col">
@@ -117,15 +124,15 @@ export const LeccionModal = (props) => {
                                             id="programa"
                                             className="form-control"
                                         >
-                                            <option defaultValue={true}>Seleccione un Programa</option>
+                                            <option defaultValue={false}>Seleccione un Programa</option>
                                             {
                                                 Array.isArray(programas) ? programas.map((prog, i) =>
-                                                    <option key={i} value={prog.nombre}>{prog.nombre}</option>
+                                                    <option key={prog?.nombre} value={prog?.nombre}>{prog?.nombre}</option>
                                                 ) : null
                                             }
                                         </Field>
                                         {errors.programa && touched.programa ? (
-                                            <div className="text-danger">{errors.programa}</div>
+                                            <div className="text-danger">{errors?.programa}</div>
                                         ) : null}
                                     </div>)
                                 }

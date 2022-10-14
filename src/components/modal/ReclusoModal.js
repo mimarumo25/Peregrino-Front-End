@@ -44,10 +44,8 @@ export const ReclusoModal = (props) => {
                         onSubmit={(values, { resetForm }) => {
                             if (_id) {
                                 dispatch(updateRecluso(values, _id))
-                                resetForm()
                             } else {
                                 dispatch(addRecluso(values))
-                                resetForm()
                             }
                         }}
                     >

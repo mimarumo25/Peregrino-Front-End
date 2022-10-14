@@ -86,9 +86,7 @@ export const MatriculaModalEdit = ( props ) => {
                             validationSchema={validationReclusoSchema}
                             onSubmit={(values, { resetForm }) => {
                                 const { nombres, ...rest } = values;
-                                console.log({ matriculaId });
                                 dispatch( updateMatricula( rest, matriculaId ));
-                                resetForm();
                             }}
                         >
                             {({ errors, touched }) => (

@@ -19,16 +19,17 @@ export const SalidaRecluso = () => {
   const [dataEdit, setDataEdit] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [value, setValue] = useState('');
+
+
   const modalNewSalida = () => {
     setModalTitle("Registrar Salida del Recluso")
     setModalShow(true);
-    setDataEdit({})
+    setDataEdit({
+      
+    });
   };
   const handleSearch = (e) => {
     setValue(e.target.value);
-    if (e.target.value <= 0) {
-      dispatch();
-    }
   };
 
   useEffect(() => {   
@@ -37,34 +38,36 @@ export const SalidaRecluso = () => {
     dispatch(getSalidaReclusoAll()); 
     setIsLoading(false);
   }, [dispatch]);
+
 useEffect(() => {
-  setDataRegistros()
+  setDataRegistros();
 }, [salidaReclusos]);
 
 const setDataRegistros = () => {
-  if ( registros.length === 0 && (registros.length < salidaReclusos.length)&& !isLoading ) {
-    salidaReclusos?.forEach(( salidareclusos, index ) => {    
-      salidareclusos?.recluso?.forEach(( recluso ) => {
-          setRegistros(( prev ) => {
-            return (
-              [ ...prev,{
-                id:salidareclusos?._id,
-                idRecluso:recluso._id,
-                cedula: recluso?.cedula,
-                nombre: recluso?.nombres,
-                apellido: recluso?.apellidos,
-                direccion: salidareclusos.direccion,
-                telefono: salidareclusos?.telefono,
-                Fecha_salida: salidareclusos?.fechaSalida,
-                tipoSalida:salidareclusos?.salida[0]?.name,
-                observacion: salidareclusos?.observacion,
-              }]
-
-            )
+    setRegistros([]);
+    if ( !isLoading ) {
+      salidaReclusos?.map(( salidareclusos ) => {    
+        salidareclusos?.recluso?.map(( recluso ) => {
+            setRegistros(( prev ) => {
+              return (
+                [ ...prev,{
+                  id:salidareclusos?._id,
+                  idRecluso:recluso._id,
+                  cedula: recluso?.cedula,
+                  nombre: recluso?.nombres,
+                  apellido: recluso?.apellidos,
+                  direccion: salidareclusos.direccion,
+                  telefono: salidareclusos?.telefono,
+                  Fecha_salida: salidareclusos?.fechaSalida,
+                  tipoSalida:salidareclusos?.salida[0]?.name,
+                  observacion: salidareclusos?.observacion,
+                }]
+  
+              )
+            })
           })
-        })
-      });
-  }
+        });
+    }
 }
 const modalEditSalida = (registro) => {
   setDataEdit(registro)
@@ -126,6 +129,7 @@ dispatch(deleteSalidaRecluso(id))
         </div>
         {/* SEARCH */}
         <form
+          onSubmit={(e) => e.preventDefault() }
           style={{
             width: "320px",
             padding: "0 1rem",
@@ -138,12 +142,16 @@ dispatch(deleteSalidaRecluso(id))
               type="search"
               className="form-control"
               onChange={handleSearch}
-              placeholder={`Buscar Leccion por Nombre`}
+              placeholder={`Buscar Leccion por Cedula`}
               value={value}
               aria-label="Buscar..."
               aria-describedby="search-addon"
             />
-            <button className="input-group-text border-0" id="search-addon">
+            <button 
+            type='button'
+            className="input-group-text border-0" 
+            id="search-addon"
+            >
               <Icon icon="akar-icons:search" color="white" width="20" />
             </button>
           </div>
@@ -167,10 +175,11 @@ dispatch(deleteSalidaRecluso(id))
             <th>Acciones</th>
           </tr>
         </thead>
-        {/* <tbody>{ (matriculas.length > 0 && !isLoading ) && mapArray() }</tbody> */}
         <tbody>
           {
-          registros?.map( ( salida) => (
+          (registros.length > 0 && !isLoading ) ?
+          registros?.filter(data => data.cedula.includes(value))
+          .map( (salida) => (
           <tr key={salida.id}>
             <td>{salida.cedula}</td>
             <td>{salida.nombre}</td>
@@ -211,7 +220,7 @@ dispatch(deleteSalidaRecluso(id))
             </td>
           </tr>
           )
-          )
+          ) : null
           
       }
         </tbody>

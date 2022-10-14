@@ -34,8 +34,8 @@ export const Matricula = () => {
   }
 
   const setAllMatriculasInState = () => {
-
-    if (pdfData.length === 0 && (pdfData.length < matriculas.length) && !isLoading) {
+    setPdfData([]);
+    if (!isLoading) {
       matriculas.forEach((matricula, index) => {
         matricula.recluso.forEach((recluso) => {
           matricula.leccion.forEach((leccion) => {

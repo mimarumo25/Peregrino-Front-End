@@ -187,7 +187,6 @@ export const Internos = () => {
                 color="white"
                 width="25"
               />
-
             }
           />
           <button type='button' className='btn btn-danger' style={{

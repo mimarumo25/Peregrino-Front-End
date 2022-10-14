@@ -29,8 +29,9 @@ export const SalidaReclusoModal = (props) => {
   const [resulData, setResulData] = useState([]);
   const [cedula, setCedula] = useState("");
   const [idR, setIdR] = useState();
-  const [nombreCompleto, setnombreCompleto] = useState("");
+  const [nombreCompleto, setNombreCompleto] = useState("");
   const dispatch = useDispatch();
+
   const validationReclusoSchema = Yup.object().shape({
     cedula: Yup.string().required("Requerido*"),
     nombres: Yup.string().required("Requerido*"),
@@ -52,7 +53,12 @@ export const SalidaReclusoModal = (props) => {
     };
     cargaTipoSalida();
     setCedula(ced);
-    setnombreCompleto(`${nombre} ${apellido}`);
+    console.log({nombre, apellido});
+    if ( !nombre && !apellido ) {
+      setNombreCompleto('Nombres');
+    } else {
+      setNombreCompleto(`${nombre} ${apellido}`);
+    }
     setIdR(idRecluso);
   }, [tipoSalida, props]);
   const handleChange = ({ target }) => {
@@ -68,7 +74,7 @@ export const SalidaReclusoModal = (props) => {
     const { _id, cedula, nombres, apellidos } = recluso;
     const nuevoNombre = `${nombres} ${apellidos}`;
     setCedula(cedula);
-    setnombreCompleto(nuevoNombre);
+    setNombreCompleto(nuevoNombre);
     setIdR(_id);
   };
 
@@ -79,6 +85,7 @@ export const SalidaReclusoModal = (props) => {
         size="lg"
         aria-labelledby="contained-modal-title-vcenter"
         centered
+        id="exampleModal"
       >
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
@@ -123,7 +130,6 @@ export const SalidaReclusoModal = (props) => {
               validationSchema={validationReclusoSchema}
               onSubmit={(values, { resetForm }) => {
                 if (id) {
-                  console.log({ id });
                   dispatch(
                     updateSalidaRecluso(values, id)
                   );
@@ -139,10 +145,6 @@ export const SalidaReclusoModal = (props) => {
                     )
                   );
                 }
-                setCedula("");
-                setnombreCompleto("");
-                setIdR("");
-                resetForm();
               }}
             >
               {({ values, errors, touched, handleChange, handleBlur }) => (
@@ -334,6 +336,8 @@ export const SalidaReclusoModal = (props) => {
                       type="submit"
                       id="guardarSalida"
                       className="btn btn-success"
+                      data-mdb-toggle="modal"
+                      data-mdb-target="#exampleModal"
                     >
                       <Icon
                         icon="fluent:save-24-filled"

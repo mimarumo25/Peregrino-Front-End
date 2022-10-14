@@ -104,7 +104,6 @@ if(user.roles!=="admin"){
 }else{
   return (
     <div>
-      
       <UserModal
         show={modalShow}
         onHide={() => setModalShow(false)}
@@ -114,7 +113,7 @@ if(user.roles!=="admin"){
         backdrop="static"
         keyboard={false}
       />
-      <dir className="py-2 d-flex align-items-center justify-content-between">
+      <div className="py-2 d-flex align-items-center justify-content-between">
         <Button onClick={modalNewUser}>
           <Icon icon="ant-design:plus-circle-outlined" width="20" /> Nuevo
         </Button>
@@ -143,7 +142,7 @@ if(user.roles!=="admin"){
           </div>
         </form>
         {/* SEARCH */}
-      </dir>
+      </div>
       <table className="table table-hover fs-6">
         <thead>
           <tr>
