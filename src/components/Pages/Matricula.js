@@ -294,7 +294,7 @@ export const Matricula = () => {
                       tabIndex="0"
                       data-bs-toggle="tooltip"
                       data-bs-placement="top"
-                      title="Matricular"
+                      title="Editar"
                     >
                       <Icon icon="el:address-book-alt" width="20" />
                     </button>
